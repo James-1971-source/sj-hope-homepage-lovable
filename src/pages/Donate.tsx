@@ -8,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { ChevronRight, Heart, Gift, CreditCard, Building, Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const donationAmounts = [10000, 30000, 50000, 100000];
 
@@ -22,10 +23,28 @@ export default function Donate() {
   const [donationType, setDonationType] = useState("regular");
   const [amount, setAmount] = useState(30000);
   const [customAmount, setCustomAmount] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("후원 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const { error } = await supabase.from("donation_inquiries" as any).insert({
+      name: formData.get("name") as string,
+      phone: formData.get("phone") as string,
+      email: formData.get("email") as string,
+      donation_type: donationType === "regular" ? "정기후원" : "일시후원",
+      message: formData.get("message") as string,
+    });
+    
+    setIsSubmitting(false);
+    if (error) {
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
+    } else {
+      toast.success("후원 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
+      (e.target as HTMLFormElement).reset();
+    }
   };
 
   return (

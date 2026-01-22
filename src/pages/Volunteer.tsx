@@ -14,6 +14,7 @@ import {
 import { ChevronRight, Users, Calendar, Clock, MapPin, Check } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const volunteerAreas = [
   { id: "learning", name: "학습지도", description: "청소년 학습 멘토링, 과목별 지도" },
@@ -43,6 +44,7 @@ const faqs = [
 
 export default function Volunteer() {
   const [selectedAreas, setSelectedAreas] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleAreaToggle = (areaId: string) => {
     setSelectedAreas((prev) =>
@@ -52,9 +54,29 @@ export default function Volunteer() {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("자원봉사 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const areas = selectedAreas.map(id => volunteerAreas.find(a => a.id === id)?.name).join(", ");
+    
+    const { error } = await supabase.from("volunteer_applications" as any).insert({
+      name: formData.get("name") as string,
+      phone: formData.get("phone") as string,
+      email: formData.get("email") as string,
+      availability: `희망분야: ${areas}\n희망요일: ${formData.get("preferred-day")}\n희망시간: ${formData.get("preferred-time")}`,
+      message: `경험: ${formData.get("experience")}\n지원동기: ${formData.get("motivation")}`,
+    });
+    
+    setIsSubmitting(false);
+    if (error) {
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
+    } else {
+      toast.success("자원봉사 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
+      (e.target as HTMLFormElement).reset();
+      setSelectedAreas([]);
+    }
   };
 
   return (

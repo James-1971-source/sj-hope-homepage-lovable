@@ -6,11 +6,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ChevronRight, MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Contact() {
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    toast.success("문의가 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.");
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const { error } = await supabase.from("contact_messages" as any).insert({
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    });
+    
+    setIsSubmitting(false);
+    if (error) {
+      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
+    } else {
+      toast.success("문의가 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.");
+      (e.target as HTMLFormElement).reset();
+    }
   };
 
   return (
