@@ -17,7 +17,7 @@ export default function Contact() {
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
-    const { error } = await supabase.from("contact_messages" as any).insert({
+    const { error } = await supabase.from("contact_messages").insert({
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       subject: formData.get("subject") as string,
@@ -62,25 +62,26 @@ export default function Contact() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">이름 *</Label>
-                    <Input id="name" placeholder="홍길동" required />
+                    <Input id="name" name="name" placeholder="홍길동" required />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="phone">연락처 *</Label>
-                    <Input id="phone" placeholder="010-0000-0000" required />
+                    <Input id="phone" name="phone" placeholder="010-0000-0000" required />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">이메일</Label>
-                  <Input id="email" type="email" placeholder="example@email.com" />
+                  <Input id="email" name="email" type="email" placeholder="example@email.com" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="subject">문의 제목 *</Label>
-                  <Input id="subject" placeholder="문의 제목을 입력해 주세요" required />
+                  <Input id="subject" name="subject" placeholder="문의 제목을 입력해 주세요" required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="message">문의 내용 *</Label>
                   <Textarea
                     id="message"
+                    name="message"
                     placeholder="문의하실 내용을 자세히 적어주세요"
                     rows={6}
                     required

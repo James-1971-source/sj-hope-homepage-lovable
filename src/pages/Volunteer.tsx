@@ -61,7 +61,7 @@ export default function Volunteer() {
     const formData = new FormData(e.currentTarget);
     const areas = selectedAreas.map(id => volunteerAreas.find(a => a.id === id)?.name).join(", ");
     
-    const { error } = await supabase.from("volunteer_applications" as any).insert({
+    const { error } = await supabase.from("volunteer_applications").insert({
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
       email: formData.get("email") as string,
@@ -110,23 +110,23 @@ export default function Volunteer() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">이름 *</Label>
-                      <Input id="name" placeholder="홍길동" required />
+                      <Input id="name" name="name" placeholder="홍길동" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="birth">생년월일 *</Label>
-                      <Input id="birth" placeholder="1990-01-01" required />
+                      <Input id="birth" name="birth" placeholder="1990-01-01" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">연락처 *</Label>
-                      <Input id="phone" placeholder="010-0000-0000" required />
+                      <Input id="phone" name="phone" placeholder="010-0000-0000" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">이메일 *</Label>
-                      <Input id="email" type="email" placeholder="example@email.com" required />
+                      <Input id="email" name="email" type="email" placeholder="example@email.com" required />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="occupation">직업/소속</Label>
-                      <Input id="occupation" placeholder="대학생, 직장인 등" />
+                      <Input id="occupation" name="occupation" placeholder="대학생, 직장인 등" />
                     </div>
                   </div>
                 </div>
@@ -163,11 +163,11 @@ export default function Volunteer() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="preferred-day">희망 요일</Label>
-                      <Input id="preferred-day" placeholder="예: 월, 수, 금" />
+                      <Input id="preferred-day" name="preferred-day" placeholder="예: 월, 수, 금" />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="preferred-time">희망 시간대</Label>
-                      <Input id="preferred-time" placeholder="예: 오후 3시 ~ 6시" />
+                      <Input id="preferred-time" name="preferred-time" placeholder="예: 오후 3시 ~ 6시" />
                     </div>
                   </div>
                 </div>
@@ -180,6 +180,7 @@ export default function Volunteer() {
                       <Label htmlFor="experience">관련 경험</Label>
                       <Textarea
                         id="experience"
+                        name="experience"
                         placeholder="자원봉사, 교육, 상담 등 관련 경험이 있으시면 적어주세요"
                         rows={3}
                       />
@@ -188,6 +189,7 @@ export default function Volunteer() {
                       <Label htmlFor="motivation">지원 동기</Label>
                       <Textarea
                         id="motivation"
+                        name="motivation"
                         placeholder="자원봉사에 참여하고자 하는 이유를 적어주세요"
                         rows={3}
                       />

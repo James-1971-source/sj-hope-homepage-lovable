@@ -30,7 +30,7 @@ export default function Donate() {
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
-    const { error } = await supabase.from("donation_inquiries" as any).insert({
+    const { error } = await supabase.from("donation_inquiries").insert({
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
       email: formData.get("email") as string,
@@ -157,20 +157,21 @@ export default function Donate() {
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">이름 *</Label>
-                      <Input id="name" placeholder="홍길동" required />
+                      <Input id="name" name="name" placeholder="홍길동" required />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="phone">연락처 *</Label>
-                      <Input id="phone" placeholder="010-0000-0000" required />
+                      <Input id="phone" name="phone" placeholder="010-0000-0000" required />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="email">이메일</Label>
-                      <Input id="email" type="email" placeholder="example@email.com" />
+                      <Input id="email" name="email" type="email" placeholder="example@email.com" />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="message">응원 메시지</Label>
                       <Textarea
                         id="message"
+                        name="message"
                         placeholder="청소년들에게 전하고 싶은 응원의 메시지를 남겨주세요"
                         rows={3}
                       />
