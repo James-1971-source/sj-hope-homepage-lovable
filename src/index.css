@@ -1,3 +1,6 @@
+/* Google Fonts Import - 반드시 최상단에 위치 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,8 +9,6 @@
    Tone: 따뜻함, 신뢰, 청소년 친화적
    Colors: 코랄/오렌지 (희망) + 네이비 (신뢰) + 자연스러운 중립색
 */
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
