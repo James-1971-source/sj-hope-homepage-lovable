@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
-import { FileText, BookOpen, Images, FolderOpen, Heart, Users, MessageSquare } from "lucide-react";
+import { FileText, BookOpen, Images, Video, FolderOpen, Heart, Users, MessageSquare } from "lucide-react";
 
 interface DashboardStats {
   posts: number;
   programs: number;
   galleries: number;
+  videos: number;
   resources: number;
   donations: number;
   volunteers: number;
@@ -19,6 +20,7 @@ export default function AdminDashboard() {
     posts: 0,
     programs: 0,
     galleries: 0,
+    videos: 0,
     resources: 0,
     donations: 0,
     volunteers: 0,
@@ -33,6 +35,7 @@ export default function AdminDashboard() {
           { count: posts },
           { count: programs },
           { count: galleries },
+          { count: videos },
           { count: resources },
           { count: donations },
           { count: volunteers },
@@ -41,6 +44,7 @@ export default function AdminDashboard() {
           supabase.from("posts").select("*", { count: "exact", head: true }),
           supabase.from("programs").select("*", { count: "exact", head: true }),
           supabase.from("gallery_albums").select("*", { count: "exact", head: true }),
+          supabase.from("videos").select("*", { count: "exact", head: true }),
           supabase.from("resources").select("*", { count: "exact", head: true }),
           supabase.from("donation_inquiries").select("*", { count: "exact", head: true }),
           supabase.from("volunteer_applications").select("*", { count: "exact", head: true }),
@@ -51,6 +55,7 @@ export default function AdminDashboard() {
           posts: posts || 0,
           programs: programs || 0,
           galleries: galleries || 0,
+          videos: videos || 0,
           resources: resources || 0,
           donations: donations || 0,
           volunteers: volunteers || 0,
@@ -70,6 +75,7 @@ export default function AdminDashboard() {
     { label: "공지/소식", value: stats.posts, icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
     { label: "프로그램", value: stats.programs, icon: BookOpen, color: "text-green-500", bg: "bg-green-500/10" },
     { label: "갤러리", value: stats.galleries, icon: Images, color: "text-purple-500", bg: "bg-purple-500/10" },
+    { label: "영상", value: stats.videos, icon: Video, color: "text-pink-500", bg: "bg-pink-500/10" },
     { label: "자료실", value: stats.resources, icon: FolderOpen, color: "text-orange-500", bg: "bg-orange-500/10" },
     { label: "후원문의", value: stats.donations, icon: Heart, color: "text-red-500", bg: "bg-red-500/10" },
     { label: "봉사신청", value: stats.volunteers, icon: Users, color: "text-teal-500", bg: "bg-teal-500/10" },
@@ -118,6 +124,7 @@ export default function AdminDashboard() {
               <li><strong>공지/소식:</strong> 공지사항, 활동소식, 행사안내 등을 관리합니다.</li>
               <li><strong>프로그램:</strong> 운영 중인 프로그램 정보를 관리합니다.</li>
               <li><strong>갤러리:</strong> 활동 사진 앨범을 관리합니다.</li>
+              <li><strong>영상:</strong> YouTube 영상을 관리합니다.</li>
               <li><strong>자료실:</strong> 다운로드 가능한 서식 및 문서를 관리합니다.</li>
               <li><strong>후원문의:</strong> 후원 신청 내역을 확인합니다.</li>
               <li><strong>봉사신청:</strong> 자원봉사 신청 내역을 확인합니다.</li>
