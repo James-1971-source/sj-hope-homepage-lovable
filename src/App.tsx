@@ -18,6 +18,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import PostsAdmin from "./pages/admin/PostsAdmin";
 import ProgramsAdmin from "./pages/admin/ProgramsAdmin";
 import GalleryAdmin from "./pages/admin/GalleryAdmin";
+import VideosAdmin from "./pages/admin/VideosAdmin";
 import ResourcesAdmin from "./pages/admin/ResourcesAdmin";
 import DonationsAdmin from "./pages/admin/DonationsAdmin";
 import VolunteersAdmin from "./pages/admin/VolunteersAdmin";
@@ -52,6 +53,7 @@ const App = () => (
             <Route path="/admin/posts" element={<PostsAdmin />} />
             <Route path="/admin/programs" element={<ProgramsAdmin />} />
             <Route path="/admin/gallery" element={<GalleryAdmin />} />
+            <Route path="/admin/videos" element={<VideosAdmin />} />
             <Route path="/admin/resources" element={<ResourcesAdmin />} />
             <Route path="/admin/donations" element={<DonationsAdmin />} />
             <Route path="/admin/volunteers" element={<VolunteersAdmin />} />

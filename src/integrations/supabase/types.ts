@@ -242,6 +242,39 @@ export type Database = {
         }
         Relationships: []
       }
+      videos: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          is_featured: boolean
+          title: string
+          updated_at: string
+          youtube_url: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_featured?: boolean
+          title: string
+          updated_at?: string
+          youtube_url: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          is_featured?: boolean
+          title?: string
+          updated_at?: string
+          youtube_url?: string
+        }
+        Relationships: []
+      }
       volunteer_applications: {
         Row: {
           availability: string | null
