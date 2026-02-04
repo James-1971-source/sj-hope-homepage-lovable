@@ -27,7 +27,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Loader2, FileText } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, FileText, ExternalLink } from "lucide-react";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface Resource {
   id: string;
@@ -102,7 +103,7 @@ export default function ResourcesAdmin() {
       return;
     }
     if (!fileUrl.trim()) {
-      toast.error("파일 URL을 입력해주세요.");
+      toast.error("파일을 업로드하거나 URL을 입력해주세요.");
       return;
     }
 
@@ -158,6 +159,20 @@ export default function ResourcesAdmin() {
     }
   };
 
+  const handleFileUpload = (url: string) => {
+    setFileUrl(url);
+  };
+
+  const getFileName = (url: string) => {
+    try {
+      const urlObj = new URL(url);
+      const pathname = urlObj.pathname;
+      return pathname.split("/").pop() || url;
+    } catch {
+      return url;
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -206,6 +221,14 @@ export default function ResourcesAdmin() {
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-muted-foreground" />
                         <span className="font-medium">{resource.title}</span>
+                        <a
+                          href={resource.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:text-primary/80"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-sm">
@@ -267,14 +290,29 @@ export default function ResourcesAdmin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>파일 URL *</Label>
-                <Input
-                  value={fileUrl}
-                  onChange={(e) => setFileUrl(e.target.value)}
-                  placeholder="https://..."
+                <Label>파일 업로드</Label>
+                <FileUpload
+                  onUpload={handleFileUpload}
+                  accept=".pdf,.doc,.docx,.hwp,.hwpx,.xls,.xlsx,.ppt,.pptx,.zip"
+                  maxSize={20}
+                  type="file"
                 />
+                {fileUrl && (
+                  <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
+                    <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span className="text-sm truncate flex-1">{getFileName(fileUrl)}</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setFileUrl("")}
+                      className="h-6 px-2"
+                    >
+                      변경
+                    </Button>
+                  </div>
+                )}
                 <p className="text-xs text-muted-foreground">
-                  파일 호스팅 서비스에 업로드 후 URL을 입력하세요.
+                  PDF, HWP, DOC, XLS, PPT, ZIP 등 (최대 20MB)
                 </p>
               </div>
               <div className="flex justify-end gap-2 pt-4">
