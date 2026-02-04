@@ -1,51 +1,86 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, Eye } from "lucide-react";
+import { ArrowRight, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const newsItems = [
-  {
-    id: 1,
-    category: "공지",
-    title: "2024년 하반기 청소년 멘토링 프로그램 참가자 모집",
-    excerpt: "청소년들의 학습과 진로를 함께 고민할 멘토와 멘티를 모집합니다.",
-    date: "2024-01-10",
-    views: 156,
-    pinned: true,
-  },
-  {
-    id: 2,
-    category: "활동",
-    title: "겨울방학 문화체험 활동 성료",
-    excerpt: "지난 12월 진행된 문화체험 활동에 50명의 청소년이 참여했습니다.",
-    date: "2024-01-08",
-    views: 89,
-  },
-  {
-    id: 3,
-    category: "행사",
-    title: "2024년 신년맞이 후원자 감사 행사 안내",
-    excerpt: "한 해 동안 보내주신 관심과 사랑에 감사드립니다.",
-    date: "2024-01-05",
-    views: 124,
-  },
-  {
-    id: 4,
-    category: "활동",
-    title: "청소년 자기성장 캠프 후기",
-    excerpt: "자기 이해와 성장을 위한 2박 3일 캠프가 성공적으로 마무리되었습니다.",
-    date: "2024-01-03",
-    views: 78,
-  },
-];
+interface Post {
+  id: string;
+  category: string;
+  title: string;
+  content: string | null;
+  created_at: string;
+  pinned: boolean;
+}
 
 const categoryColors: Record<string, string> = {
-  공지: "bg-primary text-primary-foreground",
-  활동: "bg-accent text-accent-foreground",
-  행사: "bg-success text-success-foreground",
+  공지사항: "bg-primary text-primary-foreground",
+  활동소식: "bg-accent text-accent-foreground",
+  행사안내: "bg-success text-success-foreground",
 };
 
 export default function NewsSection() {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("posts")
+          .select("*")
+          .order("pinned", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(4);
+
+        if (error) throw error;
+        setPosts(data || []);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  const getExcerpt = (content: string | null) => {
+    if (!content) return "";
+    const plainText = content.replace(/<[^>]*>/g, "");
+    return plainText.length > 80 ? plainText.substring(0, 80) + "..." : plainText;
+  };
+
+  if (loading) {
+    return (
+      <section className="section-padding">
+        <div className="container-wide">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
+            <div>
+              <Skeleton className="h-8 w-16 mb-4" />
+              <Skeleton className="h-10 w-48" />
+            </div>
+          </div>
+          <div className="grid gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-20 w-full" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="section-padding">
       <div className="container-wide">
@@ -68,37 +103,39 @@ export default function NewsSection() {
         </div>
 
         {/* News List */}
-        <div className="grid gap-4">
-          {newsItems.map((item) => (
-            <Link
-              key={item.id}
-              to={`/news/${item.id}`}
-              className="group card-warm flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
-            >
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <Badge className={categoryColors[item.category] || "bg-muted"}>
-                  {item.category}
-                </Badge>
-                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate flex-1">
-                  {item.pinned && (
-                    <span className="text-primary mr-2">[중요]</span>
-                  )}
-                  {item.title}
-                </h3>
-              </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  {item.date}
+        {posts.length > 0 ? (
+          <div className="grid gap-4">
+            {posts.map((item) => (
+              <Link
+                key={item.id}
+                to={`/news/${item.id}`}
+                className="group card-warm flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
+              >
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <Badge className={categoryColors[item.category] || "bg-muted"}>
+                    {item.category}
+                  </Badge>
+                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate flex-1">
+                    {item.pinned && (
+                      <span className="text-primary mr-2">[중요]</span>
+                    )}
+                    {item.title}
+                  </h3>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Eye className="h-4 w-4" />
-                  {item.views}
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-4 w-4" />
+                    {formatDate(item.created_at)}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-muted-foreground">
+            등록된 소식이 없습니다.
+          </div>
+        )}
       </div>
     </section>
   );
