@@ -1,73 +1,58 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { Button } from "@/components/ui/button";
 import { ChevronRight, Images, X, ChevronLeft } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogClose,
 } from "@/components/ui/dialog";
-import programEducation from "@/assets/program-education.jpg";
-import programCounseling from "@/assets/program-counseling.jpg";
-import programCulture from "@/assets/program-culture.jpg";
+import { supabase } from "@/integrations/supabase/client";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const albums = [
-  {
-    id: 1,
-    title: "2024 겨울방학 학습캠프",
-    date: "2024-01-15",
-    thumbnail: programEducation,
-    images: [programEducation, programCounseling, programCulture],
-    count: 24,
-  },
-  {
-    id: 2,
-    title: "청소년 심리상담 프로그램",
-    date: "2024-01-10",
-    thumbnail: programCounseling,
-    images: [programCounseling, programEducation, programCulture],
-    count: 18,
-  },
-  {
-    id: 3,
-    title: "문화예술 체험활동",
-    date: "2024-01-05",
-    thumbnail: programCulture,
-    images: [programCulture, programEducation, programCounseling],
-    count: 32,
-  },
-  {
-    id: 4,
-    title: "진로탐색 워크숍",
-    date: "2023-12-20",
-    thumbnail: programEducation,
-    images: [programEducation, programCulture, programCounseling],
-    count: 15,
-  },
-  {
-    id: 5,
-    title: "가족상담 프로그램",
-    date: "2023-12-15",
-    thumbnail: programCounseling,
-    images: [programCounseling, programCulture, programEducation],
-    count: 12,
-  },
-  {
-    id: 6,
-    title: "연말 감사 행사",
-    date: "2023-12-10",
-    thumbnail: programCulture,
-    images: [programCulture, programCounseling, programEducation],
-    count: 28,
-  },
-];
+interface GalleryAlbum {
+  id: string;
+  title: string;
+  description: string | null;
+  images: string[] | null;
+  created_at: string;
+}
 
 export default function Gallery() {
-  const [selectedAlbum, setSelectedAlbum] = useState<typeof albums[0] | null>(null);
+  const [albums, setAlbums] = useState<GalleryAlbum[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAlbum, setSelectedAlbum] = useState<GalleryAlbum | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const openLightbox = (album: typeof albums[0], index: number = 0) => {
+  useEffect(() => {
+    const fetchAlbums = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("gallery_albums")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setAlbums(data || []);
+      } catch (error) {
+        console.error("Error fetching albums:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlbums();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
+
+  const openLightbox = (album: GalleryAlbum, index: number = 0) => {
     setSelectedAlbum(album);
     setCurrentImageIndex(index);
   };
@@ -78,17 +63,17 @@ export default function Gallery() {
   };
 
   const nextImage = () => {
-    if (selectedAlbum) {
-      setCurrentImageIndex((prev) => 
-        prev === selectedAlbum.images.length - 1 ? 0 : prev + 1
+    if (selectedAlbum && selectedAlbum.images) {
+      setCurrentImageIndex((prev) =>
+        prev === selectedAlbum.images!.length - 1 ? 0 : prev + 1
       );
     }
   };
 
   const prevImage = () => {
-    if (selectedAlbum) {
-      setCurrentImageIndex((prev) => 
-        prev === 0 ? selectedAlbum.images.length - 1 : prev - 1
+    if (selectedAlbum && selectedAlbum.images) {
+      setCurrentImageIndex((prev) =>
+        prev === 0 ? selectedAlbum.images!.length - 1 : prev - 1
       );
     }
   };
@@ -115,34 +100,54 @@ export default function Gallery() {
       {/* Gallery Grid */}
       <section className="section-padding">
         <div className="container-wide">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {albums.map((album) => (
-              <button
-                key={album.id}
-                onClick={() => openLightbox(album)}
-                className="group relative rounded-2xl overflow-hidden aspect-[4/3] text-left"
-              >
-                <img
-                  src={album.thumbnail}
-                  alt={album.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
-                <div className="absolute bottom-0 left-0 right-0 p-6">
-                  <h3 className="text-xl font-bold text-primary-foreground mb-1">
-                    {album.title}
-                  </h3>
-                  <div className="flex items-center justify-between text-primary-foreground/80 text-sm">
-                    <span>{album.date}</span>
-                    <div className="flex items-center gap-1">
-                      <Images className="h-4 w-4" />
-                      {album.count}장
+          {loading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="aspect-[4/3] rounded-2xl" />
+              ))}
+            </div>
+          ) : albums.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {albums.map((album) => {
+                const thumbnailImage = album.images && album.images.length > 0
+                  ? album.images[0]
+                  : "/placeholder.svg";
+                const imageCount = album.images?.length || 0;
+
+                return (
+                  <button
+                    key={album.id}
+                    onClick={() => openLightbox(album)}
+                    className="group relative rounded-2xl overflow-hidden aspect-[4/3] text-left"
+                    disabled={imageCount === 0}
+                  >
+                    <img
+                      src={thumbnailImage}
+                      alt={album.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 right-0 p-6">
+                      <h3 className="text-xl font-bold text-primary-foreground mb-1">
+                        {album.title}
+                      </h3>
+                      <div className="flex items-center justify-between text-primary-foreground/80 text-sm">
+                        <span>{formatDate(album.created_at)}</span>
+                        <div className="flex items-center gap-1">
+                          <Images className="h-4 w-4" />
+                          {imageCount}장
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-muted-foreground">등록된 앨범이 없습니다.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -157,7 +162,7 @@ export default function Gallery() {
 
             {/* Image */}
             <div className="relative aspect-[16/10]">
-              {selectedAlbum && (
+              {selectedAlbum && selectedAlbum.images && selectedAlbum.images.length > 0 && (
                 <img
                   src={selectedAlbum.images[currentImageIndex]}
                   alt={`${selectedAlbum.title} - ${currentImageIndex + 1}`}
@@ -167,18 +172,22 @@ export default function Gallery() {
             </div>
 
             {/* Navigation */}
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/20 hover:bg-background/40 transition-colors"
-            >
-              <ChevronLeft className="h-6 w-6 text-primary-foreground" />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/20 hover:bg-background/40 transition-colors"
-            >
-              <ChevronRight className="h-6 w-6 text-primary-foreground" />
-            </button>
+            {selectedAlbum && selectedAlbum.images && selectedAlbum.images.length > 1 && (
+              <>
+                <button
+                  onClick={prevImage}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/20 hover:bg-background/40 transition-colors"
+                >
+                  <ChevronLeft className="h-6 w-6 text-primary-foreground" />
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-background/20 hover:bg-background/40 transition-colors"
+                >
+                  <ChevronRight className="h-6 w-6 text-primary-foreground" />
+                </button>
+              </>
+            )}
 
             {/* Info */}
             <div className="p-4 text-center">
@@ -186,7 +195,7 @@ export default function Gallery() {
                 {selectedAlbum?.title}
               </h3>
               <p className="text-sm text-primary-foreground/70">
-                {currentImageIndex + 1} / {selectedAlbum?.images.length}
+                {currentImageIndex + 1} / {selectedAlbum?.images?.length || 0}
               </p>
             </div>
           </div>
