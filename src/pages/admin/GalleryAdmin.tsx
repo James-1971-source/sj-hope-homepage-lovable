@@ -21,6 +21,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2, Images } from "lucide-react";
+import { MultiFileUpload } from "@/components/admin/FileUpload";
 
 interface GalleryAlbum {
   id: string;
@@ -40,7 +41,7 @@ export default function GalleryAdmin() {
   // Form state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imagesInput, setImagesInput] = useState("");
+  const [images, setImages] = useState<string[]>([]);
 
   const fetchAlbums = async () => {
     setLoading(true);
@@ -65,7 +66,7 @@ export default function GalleryAdmin() {
   const resetForm = () => {
     setTitle("");
     setDescription("");
-    setImagesInput("");
+    setImages([]);
     setEditingAlbum(null);
   };
 
@@ -78,7 +79,7 @@ export default function GalleryAdmin() {
     setEditingAlbum(album);
     setTitle(album.title);
     setDescription(album.description || "");
-    setImagesInput(album.images?.join("\n") || "");
+    setImages(album.images || []);
     setDialogOpen(true);
   };
 
@@ -89,11 +90,6 @@ export default function GalleryAdmin() {
     }
 
     setSaving(true);
-
-    const images = imagesInput
-      .split("\n")
-      .map((url) => url.trim())
-      .filter((url) => url);
 
     const albumData = {
       title: title.trim(),
@@ -250,15 +246,16 @@ export default function GalleryAdmin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>이미지 URL (한 줄에 하나씩)</Label>
-                <Textarea
-                  value={imagesInput}
-                  onChange={(e) => setImagesInput(e.target.value)}
-                  placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-                  rows={6}
+                <Label>이미지 업로드</Label>
+                <MultiFileUpload
+                  urls={images}
+                  onUrlsChange={setImages}
+                  accept="image/*"
+                  maxSize={10}
+                  type="image"
                 />
                 <p className="text-xs text-muted-foreground">
-                  이미지 URL을 한 줄에 하나씩 입력하세요.
+                  이미지 파일을 직접 업로드하거나 드래그 앤 드롭하세요.
                 </p>
               </div>
               <div className="flex justify-end gap-2 pt-4">
