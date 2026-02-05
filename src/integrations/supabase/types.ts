@@ -71,6 +71,36 @@ export type Database = {
         }
         Relationships: []
       }
+      facilities: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          images: string[] | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          images?: string[] | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          images?: string[] | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gallery_albums: {
         Row: {
           created_at: string
@@ -94,6 +124,110 @@ export type Database = {
           id?: string
           images?: string[] | null
           title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      history_items: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          event: string
+          id: string
+          updated_at: string
+          year: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          event: string
+          id?: string
+          updated_at?: string
+          year: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          event?: string
+          id?: string
+          updated_at?: string
+          year?: string
+        }
+        Relationships: []
+      }
+      organization_items: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          level: number | null
+          name: string
+          parent_id: string | null
+          position: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          level?: number | null
+          name: string
+          parent_id?: string | null
+          position?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          level?: number | null
+          name?: string
+          parent_id?: string | null
+          position?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "organization_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_contents: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number | null
+          id: string
+          images: string[] | null
+          page_key: string
+          section_key: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          images?: string[] | null
+          page_key: string
+          section_key: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          images?: string[] | null
+          page_key?: string
+          section_key?: string
+          title?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -218,6 +352,30 @@ export type Database = {
           file_url?: string
           id?: string
           title?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          value: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string | null
         }
         Relationships: []
       }

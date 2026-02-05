@@ -136,27 +136,38 @@ export default function FileUpload({
   );
 }
 
-interface MultiFileUploadProps {
-  urls: string[];
-  onUrlsChange: (urls: string[]) => void;
+export interface MultiFileUploadProps {
+  urls?: string[];
+  onUrlsChange?: (urls: string[]) => void;
+  onUpload?: (urls: string[]) => void;
   accept?: string;
   maxSize?: number;
   type?: "image" | "file";
+  folder?: string;
+  label?: string;
 }
 
 export function MultiFileUpload({
-  urls,
+  urls = [],
   onUrlsChange,
+  onUpload,
   accept = "image/*",
   maxSize = 10,
   type = "image",
 }: MultiFileUploadProps) {
   const handleUpload = (url: string) => {
-    onUrlsChange([...urls, url]);
+    if (onUrlsChange) {
+      onUrlsChange([...urls, url]);
+    }
+    if (onUpload) {
+      onUpload([...urls, url]);
+    }
   };
 
   const handleRemove = (index: number) => {
-    onUrlsChange(urls.filter((_, i) => i !== index));
+    if (onUrlsChange) {
+      onUrlsChange(urls.filter((_, i) => i !== index));
+    }
   };
 
   return (

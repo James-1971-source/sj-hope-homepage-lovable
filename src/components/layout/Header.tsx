@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Heart, Phone, ChevronDown } from "lucide-react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 const navigation = [{
   name: "기관소개",
   href: "/about",
@@ -76,6 +77,8 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const location = useLocation();
+  const { settings } = useSiteSettings();
+  
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";
     return location.pathname.startsWith(href);
@@ -85,9 +88,9 @@ export default function Header() {
       <div className="bg-secondary text-secondary-foreground">
         <div className="container-wide flex items-center justify-between py-2 text-sm">
           <div className="flex items-center gap-4">
-            <a href="tel:02-XXX-XXXX" className="flex items-center gap-1 hover:text-primary-foreground/80 transition-colors">
+            <a href={`tel:${settings.phone}`} className="flex items-center gap-1 hover:text-primary-foreground/80 transition-colors">
               <Phone className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">053-428-7942</span>
+              <span className="hidden sm:inline">{settings.phone}</span>
             </a>
           </div>
           <div className="flex items-center gap-3">
@@ -104,12 +107,20 @@ export default function Header() {
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg md:text-xl">S&J</span>
-            </div>
+            {settings.logo_url ? (
+              <img 
+                src={settings.logo_url} 
+                alt={settings.org_name} 
+                className="w-10 h-10 md:w-12 md:h-12 rounded-xl object-contain"
+              />
+            ) : (
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-lg md:text-xl">S&J</span>
+              </div>
+            )}
             <div className="hidden sm:block">
-              <p className="font-bold text-lg text-foreground">S&J희망나눔</p>
-              <p className="text-xs text-muted-foreground">청소년 교육복지기관</p>
+              <p className="font-bold text-lg text-foreground">{settings.org_name}</p>
+              <p className="text-xs text-muted-foreground">{settings.org_subtitle}</p>
             </div>
           </Link>
 
