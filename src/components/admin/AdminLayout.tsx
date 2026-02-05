@@ -15,12 +15,16 @@ import {
   Home,
   Menu,
   X,
+  Settings,
+  Building2,
 } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 
 const navItems = [
   { path: "/admin", label: "대시보드", icon: LayoutDashboard },
+  { path: "/admin/settings", label: "사이트 설정", icon: Settings },
+  { path: "/admin/pages", label: "페이지 관리", icon: Building2 },
   { path: "/admin/posts", label: "공지/소식", icon: FileText },
   { path: "/admin/programs", label: "프로그램", icon: BookOpen },
   { path: "/admin/gallery", label: "갤러리", icon: Images },
