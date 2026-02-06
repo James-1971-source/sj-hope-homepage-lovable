@@ -26,7 +26,7 @@ const navItems = [
   { path: "/admin/settings", label: "사이트 설정", icon: Settings },
   { path: "/admin/pages", label: "페이지 관리", icon: Building2 },
   { path: "/admin/posts", label: "공지/소식", icon: FileText },
-  { path: "/admin/programs", label: "프로그램", icon: BookOpen },
+  { path: "/admin/programs", label: "사업소개", icon: BookOpen },
   { path: "/admin/gallery", label: "갤러리", icon: Images },
   { path: "/admin/videos", label: "영상", icon: Video },
   { path: "/admin/resources", label: "자료실", icon: FolderOpen },
