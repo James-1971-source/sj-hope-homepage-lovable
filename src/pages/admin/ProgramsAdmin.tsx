@@ -23,6 +23,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { MultiFileUpload } from "@/components/admin/FileUpload";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const PROGRAM_CATEGORIES = [
+  { label: "글로벌 드림 프로젝트", value: "global-dream" },
+  { label: "IT 교육 지원 사업", value: "it-education" },
+  { label: "외국어 교육 지원 사업", value: "language-education" },
+  { label: "교육비 지원 사업", value: "education-expense" },
+  { label: "문화체험 지원 사업", value: "culture-experience" },
+  { label: "아동복지시설 지원 사업", value: "child-welfare" },
+  { label: "IT 교육장 구축 지원 사업", value: "it-facility" },
+];
 
 interface Program {
   id: string;
@@ -51,6 +68,7 @@ export default function ProgramsAdmin() {
   const [schedule, setSchedule] = useState("");
   const [tagsInput, setTagsInput] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [category, setCategory] = useState("");
 
   const fetchPrograms = async () => {
     setLoading(true);
@@ -80,6 +98,7 @@ export default function ProgramsAdmin() {
     setSchedule("");
     setTagsInput("");
     setImages([]);
+    setCategory("");
     setEditingProgram(null);
   };
 
@@ -97,6 +116,9 @@ export default function ProgramsAdmin() {
     setSchedule(program.schedule || "");
     setTagsInput(program.tags?.join(", ") || "");
     setImages(program.images || []);
+    // Find category from tags
+    const foundCat = PROGRAM_CATEGORIES.find((c) => program.tags?.includes(c.value));
+    setCategory(foundCat?.value || "");
     setDialogOpen(true);
   };
 
@@ -108,10 +130,13 @@ export default function ProgramsAdmin() {
 
     setSaving(true);
 
-    const tags = tagsInput
+    const manualTags = tagsInput
       .split(",")
       .map((t) => t.trim())
       .filter((t) => t);
+    const tags = category
+      ? [category, ...manualTags.filter((t) => t !== category)]
+      : manualTags;
 
     const programData = {
       title: title.trim(),
@@ -172,12 +197,12 @@ export default function ProgramsAdmin() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground">프로그램 관리</h1>
-            <p className="text-muted-foreground mt-1">운영 중인 프로그램을 관리합니다.</p>
+           <h1 className="text-2xl md:text-3xl font-bold text-foreground">사업소개 관리</h1>
+            <p className="text-muted-foreground mt-1">운영 중인 사업을 관리합니다.</p>
           </div>
           <Button onClick={openCreateDialog}>
             <Plus className="h-4 w-4 mr-2" />
-            새 프로그램
+            새 사업 등록
           </Button>
         </div>
 
@@ -186,7 +211,7 @@ export default function ProgramsAdmin() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>프로그램명</TableHead>
+                <TableHead>사업명</TableHead>
                 <TableHead>대상</TableHead>
                 <TableHead>일정</TableHead>
                 <TableHead className="w-32">등록일</TableHead>
@@ -203,7 +228,7 @@ export default function ProgramsAdmin() {
               ) : programs.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    등록된 프로그램이 없습니다.
+                    등록된 사업이 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
@@ -257,15 +282,30 @@ export default function ProgramsAdmin() {
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>{editingProgram ? "프로그램 수정" : "새 프로그램"}</DialogTitle>
+              <DialogTitle>{editingProgram ? "사업 수정" : "새 사업"}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label>프로그램명 *</Label>
+                <Label>사업 분류 *</Label>
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="사업을 선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PROGRAM_CATEGORIES.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>사업명 *</Label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="프로그램 이름"
+                  placeholder="사업 이름"
                 />
               </div>
               <div className="space-y-2">
@@ -299,7 +339,7 @@ export default function ProgramsAdmin() {
                 <Textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="프로그램 상세 내용"
+                  placeholder="사업 상세 내용"
                   rows={8}
                 />
               </div>
