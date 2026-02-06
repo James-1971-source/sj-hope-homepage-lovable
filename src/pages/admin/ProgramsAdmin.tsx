@@ -22,6 +22,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { MultiFileUpload } from "@/components/admin/FileUpload";
 
 interface Program {
   id: string;
@@ -49,6 +50,7 @@ export default function ProgramsAdmin() {
   const [target, setTarget] = useState("");
   const [schedule, setSchedule] = useState("");
   const [tagsInput, setTagsInput] = useState("");
+  const [images, setImages] = useState<string[]>([]);
 
   const fetchPrograms = async () => {
     setLoading(true);
@@ -77,6 +79,7 @@ export default function ProgramsAdmin() {
     setTarget("");
     setSchedule("");
     setTagsInput("");
+    setImages([]);
     setEditingProgram(null);
   };
 
@@ -93,6 +96,7 @@ export default function ProgramsAdmin() {
     setTarget(program.target || "");
     setSchedule(program.schedule || "");
     setTagsInput(program.tags?.join(", ") || "");
+    setImages(program.images || []);
     setDialogOpen(true);
   };
 
@@ -116,6 +120,7 @@ export default function ProgramsAdmin() {
       target: target.trim() || null,
       schedule: schedule.trim() || null,
       tags,
+      images,
     };
 
     if (editingProgram) {
@@ -304,6 +309,16 @@ export default function ProgramsAdmin() {
                   value={tagsInput}
                   onChange={(e) => setTagsInput(e.target.value)}
                   placeholder="학습지원, 멘토링, 진로상담"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>이미지</Label>
+                <MultiFileUpload
+                  urls={images}
+                  onUrlsChange={setImages}
+                  accept="image/*"
+                  maxSize={10}
+                  type="image"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-4">

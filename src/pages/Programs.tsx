@@ -1,13 +1,29 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRight, ArrowRight, Loader2 } from "lucide-react";
+import { ChevronRight, Loader2 } from "lucide-react";
 import { usePrograms } from "@/hooks/usePrograms";
 import programEducation from "@/assets/program-education.jpg";
 
+const CATEGORIES = [
+  { label: "전체", value: "" },
+  { label: "글로벌 드림 프로젝트", value: "global-dream" },
+  { label: "IT 교육 지원 사업", value: "it-education" },
+  { label: "외국어 교육 지원 사업", value: "language-education" },
+  { label: "교육비 지원 사업", value: "education-expense" },
+  { label: "문화체험 지원 사업", value: "culture-experience" },
+  { label: "아동복지시설 지원 사업", value: "child-welfare" },
+  { label: "IT 교육장 구축 지원 사업", value: "it-facility" },
+];
+
 export default function Programs() {
   const { programs, loading } = usePrograms();
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category") || "";
+
+  const filtered = category
+    ? programs.filter((p) => p.tags?.includes(category))
+    : programs;
 
   return (
     <Layout>
@@ -28,6 +44,25 @@ export default function Programs() {
         </div>
       </section>
 
+      {/* Category Filter */}
+      <section className="border-b border-border">
+        <div className="container-wide py-4 flex flex-wrap gap-2">
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.value}
+              to={cat.value ? `/programs?category=${cat.value}` : "/programs"}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                category === cat.value
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* Programs Grid */}
       <section className="section-padding">
         <div className="container-wide">
@@ -35,16 +70,17 @@ export default function Programs() {
             <div className="flex justify-center py-20">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
             </div>
-          ) : programs.length === 0 ? (
+          ) : filtered.length === 0 ? (
             <p className="text-center text-muted-foreground py-20">등록된 프로그램이 없습니다.</p>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {programs.map((program) => {
+              {filtered.map((program) => {
                 const image = program.images?.[0] || programEducation;
                 return (
-                  <div
+                  <Link
                     key={program.id}
-                    className="card-warm overflow-hidden p-0 group"
+                    to={`/programs/${program.id}`}
+                    className="card-warm overflow-hidden p-0 group block"
                   >
                     <div className="relative h-48 overflow-hidden">
                       <img
@@ -58,7 +94,7 @@ export default function Programs() {
                         {program.title}
                       </h3>
                       {program.summary && (
-                        <p className="text-muted-foreground mb-4">{program.summary}</p>
+                        <p className="text-muted-foreground mb-4 line-clamp-2">{program.summary}</p>
                       )}
                       <div className="space-y-2 text-sm text-muted-foreground mb-4">
                         {program.target && (
@@ -78,7 +114,7 @@ export default function Programs() {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>

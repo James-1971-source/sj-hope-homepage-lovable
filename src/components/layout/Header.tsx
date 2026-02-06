@@ -27,19 +27,15 @@ const navigation = [{
 }, {
   name: "사업소개",
   href: "/programs",
-  children: [{
-    name: "전체 프로그램",
-    href: "/programs"
-  }, {
-    name: "학습지원",
-    href: "/programs?category=education"
-  }, {
-    name: "상담·복지",
-    href: "/programs?category=counseling"
-  }, {
-    name: "문화·체험",
-    href: "/programs?category=culture"
-  }]
+  children: [
+    { name: "글로벌 드림 프로젝트", href: "/programs?category=global-dream" },
+    { name: "IT 교육 지원 사업", href: "/programs?category=it-education" },
+    { name: "외국어 교육 지원 사업", href: "/programs?category=language-education" },
+    { name: "교육비 지원 사업", href: "/programs?category=education-expense" },
+    { name: "문화체험 지원 사업", href: "/programs?category=culture-experience" },
+    { name: "아동복지시설 지원 사업", href: "/programs?category=child-welfare" },
+    { name: "IT 교육장 구축 지원 사업", href: "/programs?category=it-facility" },
+  ]
 }, {
   name: "소식",
   href: "/news",
