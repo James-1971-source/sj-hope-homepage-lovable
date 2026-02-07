@@ -15,6 +15,9 @@ export interface HistoryItem {
   id: string;
   year: string;
   event: string;
+  month: number | null;
+  day: number | null;
+  images: string[];
   display_order: number;
 }
 

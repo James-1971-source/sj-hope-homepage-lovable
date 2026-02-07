@@ -21,6 +21,17 @@ const categories = [
   { id: "보고서", name: "보고서" },
   { id: "안내자료", name: "안내자료" },
   { id: "일반", name: "일반" },
+  { id: "소식지", name: "소식지" },
+  { id: "후원자 명단", name: "후원자 명단" },
+  { id: "회원 명단", name: "회원 명단" },
+  { id: "재능기부활동가 명단", name: "재능기부활동가 명단" },
+  { id: "S&J 끌레버", name: "S&J 끌레버" },
+  { id: "S&J 주니어 끌레버", name: "S&J 주니어 끌레버" },
+  { id: "S&J 글로벌 서포터즈", name: "S&J 글로벌 서포터즈" },
+  { id: "S&J 온라인 홍보단", name: "S&J 온라인 홍보단" },
+  { id: "학술자료", name: "학술자료" },
+  { id: "업무협약서", name: "업무협약서" },
+  { id: "함께하는 기업 및 기관", name: "함께하는 기업 및 기관" },
 ];
 
 export default function Resources() {

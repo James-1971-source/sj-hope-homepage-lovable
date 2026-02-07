@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      banners: {
+        Row: {
+          created_at: string
+          display_order: number | null
+          id: string
+          image_url: string
+          is_active: boolean | null
+          link_url: string | null
+          slide_interval: number | null
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          link_url?: string | null
+          slide_interval?: number | null
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          link_url?: string | null
+          slide_interval?: number | null
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -131,25 +167,34 @@ export type Database = {
       history_items: {
         Row: {
           created_at: string
+          day: number | null
           display_order: number | null
           event: string
           id: string
+          images: string[] | null
+          month: number | null
           updated_at: string
           year: string
         }
         Insert: {
           created_at?: string
+          day?: number | null
           display_order?: number | null
           event: string
           id?: string
+          images?: string[] | null
+          month?: number | null
           updated_at?: string
           year: string
         }
         Update: {
           created_at?: string
+          day?: number | null
           display_order?: number | null
           event?: string
           id?: string
+          images?: string[] | null
+          month?: number | null
           updated_at?: string
           year?: string
         }

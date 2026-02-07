@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import BannerSlider from "@/components/home/BannerSlider";
 import HeroSection from "@/components/home/HeroSection";
 import ProgramsSection from "@/components/home/ProgramsSection";
 import NewsSection from "@/components/home/NewsSection";
@@ -9,6 +10,7 @@ import SupportSection from "@/components/home/SupportSection";
 export default function Index() {
   return (
     <Layout>
+      <BannerSlider />
       <HeroSection />
       <ProgramsSection />
       <NewsSection />
