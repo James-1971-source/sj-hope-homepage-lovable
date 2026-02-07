@@ -43,6 +43,17 @@ const categories = [
   { value: "보고서", label: "보고서" },
   { value: "안내자료", label: "안내자료" },
   { value: "일반", label: "일반" },
+  { value: "소식지", label: "소식지" },
+  { value: "후원자 명단", label: "후원자 명단" },
+  { value: "회원 명단", label: "회원 명단" },
+  { value: "재능기부활동가 명단", label: "재능기부활동가 명단" },
+  { value: "S&J 끌레버", label: "S&J 끌레버" },
+  { value: "S&J 주니어 끌레버", label: "S&J 주니어 끌레버" },
+  { value: "S&J 글로벌 서포터즈", label: "S&J 글로벌 서포터즈" },
+  { value: "S&J 온라인 홍보단", label: "S&J 온라인 홍보단" },
+  { value: "학술자료", label: "학술자료" },
+  { value: "업무협약서", label: "업무협약서" },
+  { value: "함께하는 기업 및 기관", label: "함께하는 기업 및 기관" },
 ];
 
 export default function ResourcesAdmin() {

@@ -25,6 +25,9 @@ interface HistoryItem {
   id: string;
   year: string;
   event: string;
+  month: number | null;
+  day: number | null;
+  images: string[];
   display_order: number;
 }
 
@@ -105,12 +108,40 @@ export default function PageContentsAdmin() {
   };
 
   // 연혁 관련 함수
-  const handleAddHistory = async () => {
+  const [historyYear, setHistoryYear] = useState<string>(new Date().getFullYear().toString());
+
+  const historyYears = Array.from(new Set(historyItems.map(i => i.year))).sort((a, b) => b.localeCompare(a));
+  const [activeHistoryYear, setActiveHistoryYear] = useState<string>("");
+
+  useEffect(() => {
+    if (historyYears.length > 0 && !activeHistoryYear) {
+      setActiveHistoryYear(historyYears[0]);
+    }
+  }, [historyYears]);
+
+  const handleAddHistoryYear = async () => {
+    const year = prompt("추가할 연도를 입력하세요 (예: 2024)");
+    if (!year || isNaN(Number(year))) return;
+    // Add a placeholder entry for the year
     try {
       const { error } = await supabase
         .from("history_items")
-        .insert({ year: new Date().getFullYear().toString(), event: "새로운 연혁", display_order: historyItems.length + 1 });
+        .insert({ year, event: "새로운 연혁", month: 1, day: 1, display_order: 0 });
+      if (error) throw error;
+      toast.success(`${year}년이 추가되었습니다.`);
+      setActiveHistoryYear(year);
+      fetchAllData();
+    } catch (error) {
+      toast.error("추가에 실패했습니다.");
+    }
+  };
 
+  const handleAddHistory = async () => {
+    const year = activeHistoryYear || new Date().getFullYear().toString();
+    try {
+      const { error } = await supabase
+        .from("history_items")
+        .insert({ year, event: "새로운 연혁", month: 1, day: 1, images: [], display_order: historyItems.length + 1 });
       if (error) throw error;
       toast.success("연혁이 추가되었습니다.");
       fetchAllData();
@@ -123,7 +154,7 @@ export default function PageContentsAdmin() {
     try {
       const { error } = await supabase
         .from("history_items")
-        .update({ year: item.year, event: item.event })
+        .update({ year: item.year, event: item.event, month: item.month, day: item.day, images: item.images })
         .eq("id", item.id);
 
       if (error) throw error;
@@ -350,50 +381,128 @@ export default function PageContentsAdmin() {
 
           {/* 연혁 탭 */}
           <TabsContent value="history" className="space-y-4">
-            <div className="flex justify-end">
-              <Button onClick={handleAddHistory}>
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <div className="flex flex-wrap gap-2">
+                {historyYears.map((year) => (
+                  <Button
+                    key={year}
+                    variant={activeHistoryYear === year ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveHistoryYear(year)}
+                  >
+                    {year}년
+                  </Button>
+                ))}
+                <Button variant="secondary" size="sm" onClick={handleAddHistoryYear}>
+                  <Plus className="h-4 w-4 mr-1" />
+                  연도 추가
+                </Button>
+              </div>
+              <Button onClick={handleAddHistory} disabled={!activeHistoryYear}>
                 <Plus className="h-4 w-4 mr-2" />
                 연혁 추가
               </Button>
             </div>
             <Card>
               <CardContent className="pt-6">
-                <div className="space-y-4">
-                  {historyItems.map((item) => (
-                    <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
-                      <GripVertical className="h-5 w-5 text-muted-foreground cursor-grab" />
-                      <Input
-                        value={item.year}
-                        onChange={(e) => {
-                          const updated = historyItems.map(h =>
-                            h.id === item.id ? { ...h, year: e.target.value } : h
-                          );
-                          setHistoryItems(updated);
-                        }}
-                        className="w-24"
-                        placeholder="년도"
-                      />
-                      <Input
-                        value={item.event}
-                        onChange={(e) => {
-                          const updated = historyItems.map(h =>
-                            h.id === item.id ? { ...h, event: e.target.value } : h
-                          );
-                          setHistoryItems(updated);
-                        }}
-                        className="flex-1"
-                        placeholder="내용"
-                      />
-                      <Button variant="outline" size="sm" onClick={() => handleUpdateHistory(item)}>
-                        <Save className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm" onClick={() => handleDeleteHistory(item.id)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
+                <div className="space-y-6">
+                  {historyItems
+                    .filter(i => i.year === activeHistoryYear)
+                    .sort((a, b) => (a.month || 0) - (b.month || 0) || (a.day || 0) - (b.day || 0))
+                    .map((item) => (
+                    <div key={item.id} className="p-4 border rounded-lg space-y-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={item.month || ""}
+                            onChange={(e) => {
+                              const updated = historyItems.map(h =>
+                                h.id === item.id ? { ...h, month: e.target.value ? Number(e.target.value) : null } : h
+                              );
+                              setHistoryItems(updated);
+                            }}
+                            className="w-20 px-2 py-2 border rounded-md bg-background text-sm"
+                          >
+                            <option value="">월</option>
+                            {Array.from({ length: 12 }, (_, i) => (
+                              <option key={i + 1} value={i + 1}>{i + 1}월</option>
+                            ))}
+                          </select>
+                          <select
+                            value={item.day || ""}
+                            onChange={(e) => {
+                              const updated = historyItems.map(h =>
+                                h.id === item.id ? { ...h, day: e.target.value ? Number(e.target.value) : null } : h
+                              );
+                              setHistoryItems(updated);
+                            }}
+                            className="w-20 px-2 py-2 border rounded-md bg-background text-sm"
+                          >
+                            <option value="">일</option>
+                            {Array.from({ length: 31 }, (_, i) => (
+                              <option key={i + 1} value={i + 1}>{i + 1}일</option>
+                            ))}
+                          </select>
+                        </div>
+                        <Input
+                          value={item.event}
+                          onChange={(e) => {
+                            const updated = historyItems.map(h =>
+                              h.id === item.id ? { ...h, event: e.target.value } : h
+                            );
+                            setHistoryItems(updated);
+                          }}
+                          className="flex-1"
+                          placeholder="연혁 내용"
+                        />
+                        <Button variant="outline" size="sm" onClick={() => handleUpdateHistory(item)}>
+                          <Save className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => handleDeleteHistory(item.id)}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                      {/* Images */}
+                      <div>
+                        <Label className="text-xs mb-1 block">이미지</Label>
+                        {item.images && item.images.length > 0 && (
+                          <div className="flex gap-2 mb-2 flex-wrap">
+                            {item.images.map((img, idx) => (
+                              <div key={idx} className="relative w-20 h-14 rounded overflow-hidden border">
+                                <img src={img} alt="" className="w-full h-full object-cover" />
+                                <button
+                                  onClick={() => {
+                                    const updated = historyItems.map(h =>
+                                      h.id === item.id ? { ...h, images: h.images.filter((_, i) => i !== idx) } : h
+                                    );
+                                    setHistoryItems(updated);
+                                  }}
+                                  className="absolute top-0 right-0 p-0.5 bg-destructive text-destructive-foreground rounded-bl"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <MultiFileUpload
+                          urls={item.images || []}
+                          onUrlsChange={(newUrls) => {
+                            const updated = historyItems.map(h =>
+                              h.id === item.id ? { ...h, images: newUrls } : h
+                            );
+                            setHistoryItems(updated);
+                          }}
+                          accept="image/*"
+                          type="image"
+                        />
+                      </div>
                     </div>
                   ))}
-                  {historyItems.length === 0 && (
-                    <p className="text-center text-muted-foreground py-8">연혁이 없습니다. 추가해주세요.</p>
+                  {historyItems.filter(i => i.year === activeHistoryYear).length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">
+                      {activeHistoryYear ? `${activeHistoryYear}년 연혁이 없습니다. 추가해주세요.` : "연도를 선택하거나 추가해주세요."}
+                    </p>
                   )}
                 </div>
               </CardContent>

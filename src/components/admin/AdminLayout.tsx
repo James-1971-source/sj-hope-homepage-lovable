@@ -24,6 +24,7 @@ import { toast } from "sonner";
 const navItems = [
   { path: "/admin", label: "대시보드", icon: LayoutDashboard },
   { path: "/admin/settings", label: "사이트 설정", icon: Settings },
+  { path: "/admin/banners", label: "배너 관리", icon: Images },
   { path: "/admin/pages", label: "페이지 관리", icon: Building2 },
   { path: "/admin/posts", label: "공지/소식", icon: FileText },
   { path: "/admin/programs", label: "사업소개", icon: BookOpen },

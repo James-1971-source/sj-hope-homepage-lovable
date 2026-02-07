@@ -10,7 +10,7 @@ const navigation = [{
   href: "/about",
   children: [{
     name: "인사말",
-    href: "/about"
+    href: "/about/greeting"
   }, {
     name: "미션과 비전",
     href: "/about/mission"
