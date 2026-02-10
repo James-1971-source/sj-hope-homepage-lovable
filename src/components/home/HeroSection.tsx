@@ -29,7 +29,7 @@ export default function HeroSection() {
         <div 
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(135deg, rgba(30, 58, 95, 0.82) 0%, rgba(44, 82, 130, 0.75) 50%, rgba(26, 54, 80, 0.78) 100%)"
+            background: `linear-gradient(135deg, ${settings.hero_overlay_color}d1 0%, ${settings.hero_overlay_color}bf 50%, ${settings.hero_overlay_color}c7 100%)`
           }}
         />
       </div>

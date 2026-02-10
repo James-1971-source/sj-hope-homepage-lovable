@@ -39,6 +39,7 @@ export interface SiteSettings {
   footer_sns_youtube: string;
   footer_sns_instagram: string;
   footer_sns_facebook: string;
+  hero_overlay_color: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -78,6 +79,7 @@ const defaultSettings: SiteSettings = {
   footer_sns_youtube: "",
   footer_sns_instagram: "",
   footer_sns_facebook: "",
+  hero_overlay_color: "#1e3a5f",
 };
 
 export function useSiteSettings() {
