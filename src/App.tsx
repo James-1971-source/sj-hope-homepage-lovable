@@ -28,6 +28,7 @@ import DonationsAdmin from "./pages/admin/DonationsAdmin";
 import VolunteersAdmin from "./pages/admin/VolunteersAdmin";
 import MessagesAdmin from "./pages/admin/MessagesAdmin";
 import NotFound from "./pages/NotFound";
+import HomepageProgramsAdmin from "./pages/admin/HomepageProgramsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
             <Route path="/admin/settings" element={<SiteSettingsAdmin />} />
             <Route path="/admin/banners" element={<BannersAdmin />} />
             <Route path="/admin/pages" element={<PageContentsAdmin />} />
+            <Route path="/admin/homepage-programs" element={<HomepageProgramsAdmin />} />
             <Route path="/admin/posts" element={<PostsAdmin />} />
             <Route path="/admin/programs" element={<ProgramsAdmin />} />
             <Route path="/admin/gallery" element={<GalleryAdmin />} />

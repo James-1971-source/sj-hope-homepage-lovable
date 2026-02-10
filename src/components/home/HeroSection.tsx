@@ -29,7 +29,7 @@ export default function HeroSection() {
         <div 
           className="absolute inset-0"
           style={{
-            background: `linear-gradient(135deg, ${settings.hero_overlay_color}d1 0%, ${settings.hero_overlay_color}bf 50%, ${settings.hero_overlay_color}c7 100%)`
+            background: `linear-gradient(135deg, ${settings.hero_overlay_color}e6 0%, ${settings.hero_overlay_color}cc 50%, ${settings.hero_overlay_color}d9 100%)`
           }}
         />
       </div>
@@ -43,13 +43,13 @@ export default function HeroSection() {
             </span>
           </div>
           
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-slide-up leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-slide-up leading-tight" style={{ textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>
             {titleLines.map((line, i) => (
               <span key={i}>{line}{i < titleLines.length - 1 && <br />}</span>
             ))}
           </h1>
           
-          <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl animate-slide-up" style={{ animationDelay: "0.1s" }}>
+          <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl animate-slide-up" style={{ animationDelay: "0.1s", textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
             {settings.hero_subtitle}
           </p>
 
