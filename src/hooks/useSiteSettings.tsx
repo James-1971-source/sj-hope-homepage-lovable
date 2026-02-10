@@ -7,6 +7,18 @@ export interface SiteSettings {
   org_subtitle: string;
   phone: string;
   address: string;
+  hero_badge: string;
+  hero_title: string;
+  hero_subtitle: string;
+  hero_image_url: string | null;
+  hero_stat_1_label: string;
+  hero_stat_1_value: string;
+  hero_stat_2_label: string;
+  hero_stat_2_value: string;
+  hero_stat_3_label: string;
+  hero_stat_3_value: string;
+  hero_stat_4_label: string;
+  hero_stat_4_value: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -15,6 +27,18 @@ const defaultSettings: SiteSettings = {
   org_subtitle: "청소년 교육복지기관",
   phone: "053-428-7942",
   address: "",
+  hero_badge: "사단법인 S&J희망나눔",
+  hero_title: "청소년의 꿈과 희망을\n함께 키워갑니다",
+  hero_subtitle: "교육, 상담, 문화 프로그램을 통해 청소년들이 건강하게 성장하고 밝은 미래를 꿈꿀 수 있도록 지원합니다.",
+  hero_image_url: null,
+  hero_stat_1_label: "설립연도",
+  hero_stat_1_value: "2015년",
+  hero_stat_2_label: "누적 수혜 청소년",
+  hero_stat_2_value: "5,000+",
+  hero_stat_3_label: "진행 프로그램",
+  hero_stat_3_value: "50+",
+  hero_stat_4_label: "자원봉사자",
+  hero_stat_4_value: "300+",
 };
 
 export function useSiteSettings() {
@@ -36,13 +60,13 @@ export function useSiteSettings() {
             return acc;
           }, {} as Record<string, string | null>);
 
-          setSettings({
-            logo_url: settingsMap.logo_url || null,
-            org_name: settingsMap.org_name || defaultSettings.org_name,
-            org_subtitle: settingsMap.org_subtitle || defaultSettings.org_subtitle,
-            phone: settingsMap.phone || defaultSettings.phone,
-            address: settingsMap.address || defaultSettings.address,
-          });
+          const merged = { ...defaultSettings };
+          for (const key of Object.keys(defaultSettings) as (keyof SiteSettings)[]) {
+            if (settingsMap[key] !== undefined && settingsMap[key] !== null) {
+              (merged as any)[key] = settingsMap[key];
+            }
+          }
+          setSettings(merged);
         }
       } catch (error) {
         console.error("Error fetching site settings:", error);

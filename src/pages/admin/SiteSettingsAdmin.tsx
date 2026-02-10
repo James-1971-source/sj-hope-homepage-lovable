@@ -4,18 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Save, Trash2 } from "lucide-react";
 import FileUpload from "@/components/admin/FileUpload";
-
-interface SiteSettings {
-  logo_url: string | null;
-  org_name: string;
-  org_subtitle: string;
-  phone: string;
-  address: string;
-}
+import type { SiteSettings } from "@/hooks/useSiteSettings";
 
 export default function SiteSettingsAdmin() {
   const [settings, setSettings] = useState<SiteSettings>({
@@ -24,6 +18,18 @@ export default function SiteSettingsAdmin() {
     org_subtitle: "청소년 교육복지기관",
     phone: "053-428-7942",
     address: "",
+    hero_badge: "사단법인 S&J희망나눔",
+    hero_title: "청소년의 꿈과 희망을\n함께 키워갑니다",
+    hero_subtitle: "교육, 상담, 문화 프로그램을 통해 청소년들이 건강하게 성장하고 밝은 미래를 꿈꿀 수 있도록 지원합니다.",
+    hero_image_url: null,
+    hero_stat_1_label: "설립연도",
+    hero_stat_1_value: "2015년",
+    hero_stat_2_label: "누적 수혜 청소년",
+    hero_stat_2_value: "5,000+",
+    hero_stat_3_label: "진행 프로그램",
+    hero_stat_3_value: "50+",
+    hero_stat_4_label: "자원봉사자",
+    hero_stat_4_value: "300+",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -46,12 +52,14 @@ export default function SiteSettingsAdmin() {
           return acc;
         }, {} as Record<string, string | null>);
 
-        setSettings({
-          logo_url: settingsMap.logo_url || null,
-          org_name: settingsMap.org_name || "S&J희망나눔",
-          org_subtitle: settingsMap.org_subtitle || "청소년 교육복지기관",
-          phone: settingsMap.phone || "053-428-7942",
-          address: settingsMap.address || "",
+        setSettings((prev) => {
+          const merged = { ...prev };
+          for (const key of Object.keys(prev) as (keyof SiteSettings)[]) {
+            if (settingsMap[key] !== undefined && settingsMap[key] !== null) {
+              (merged as any)[key] = settingsMap[key];
+            }
+          }
+          return merged;
         });
       }
     } catch (error) {
@@ -95,6 +103,18 @@ export default function SiteSettingsAdmin() {
     setSettings({ ...settings, logo_url: null });
   };
 
+  const handleHeroImageUpload = (url: string) => {
+    setSettings({ ...settings, hero_image_url: url });
+  };
+
+  const handleRemoveHeroImage = () => {
+    setSettings({ ...settings, hero_image_url: null });
+  };
+
+  const update = (key: keyof SiteSettings, value: string) => {
+    setSettings({ ...settings, [key]: value });
+  };
+
   if (loading) {
     return (
       <AdminLayout>
@@ -111,7 +131,7 @@ export default function SiteSettingsAdmin() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-foreground">사이트 설정</h1>
-            <p className="text-muted-foreground mt-1">로고, 기관명, 연락처 등 기본 정보를 관리합니다.</p>
+            <p className="text-muted-foreground mt-1">로고, 기관명, 연락처, 히어로 섹션 등 기본 정보를 관리합니다.</p>
           </div>
           <Button onClick={handleSave} disabled={saving}>
             <Save className="h-4 w-4 mr-2" />
@@ -123,17 +143,13 @@ export default function SiteSettingsAdmin() {
         <Card>
           <CardHeader>
             <CardTitle>로고</CardTitle>
-            <CardDescription>헤더에 표시될 기관 로고를 업로드하세요. (권장 크기: 200x200px 이상)</CardDescription>
+            <CardDescription>헤더에 표시될 기관 로고를 업로드하세요.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {settings.logo_url ? (
               <div className="flex items-center gap-4">
                 <div className="w-24 h-24 rounded-xl border border-border flex items-center justify-center bg-muted overflow-hidden">
-                  <img
-                    src={settings.logo_url}
-                    alt="로고 미리보기"
-                    className="w-full h-full object-contain"
-                  />
+                  <img src={settings.logo_url} alt="로고 미리보기" className="w-full h-full object-contain" />
                 </div>
                 <Button variant="outline" size="sm" onClick={handleRemoveLogo}>
                   <Trash2 className="h-4 w-4 mr-2" />
@@ -141,11 +157,7 @@ export default function SiteSettingsAdmin() {
                 </Button>
               </div>
             ) : (
-              <FileUpload
-                onUpload={handleLogoUpload}
-                accept="image/*"
-                type="image"
-              />
+              <FileUpload onUpload={handleLogoUpload} accept="image/*" type="image" />
             )}
           </CardContent>
         </Card>
@@ -160,21 +172,11 @@ export default function SiteSettingsAdmin() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="org_name">기관명</Label>
-                <Input
-                  id="org_name"
-                  value={settings.org_name}
-                  onChange={(e) => setSettings({ ...settings, org_name: e.target.value })}
-                  placeholder="기관명을 입력하세요"
-                />
+                <Input id="org_name" value={settings.org_name} onChange={(e) => update("org_name", e.target.value)} placeholder="기관명을 입력하세요" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="org_subtitle">부제목</Label>
-                <Input
-                  id="org_subtitle"
-                  value={settings.org_subtitle}
-                  onChange={(e) => setSettings({ ...settings, org_subtitle: e.target.value })}
-                  placeholder="부제목을 입력하세요"
-                />
+                <Input id="org_subtitle" value={settings.org_subtitle} onChange={(e) => update("org_subtitle", e.target.value)} placeholder="부제목을 입력하세요" />
               </div>
             </div>
           </CardContent>
@@ -190,21 +192,82 @@ export default function SiteSettingsAdmin() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="phone">전화번호</Label>
-                <Input
-                  id="phone"
-                  value={settings.phone}
-                  onChange={(e) => setSettings({ ...settings, phone: e.target.value })}
-                  placeholder="전화번호를 입력하세요"
-                />
+                <Input id="phone" value={settings.phone} onChange={(e) => update("phone", e.target.value)} placeholder="전화번호를 입력하세요" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="address">주소</Label>
-                <Input
-                  id="address"
-                  value={settings.address}
-                  onChange={(e) => setSettings({ ...settings, address: e.target.value })}
-                  placeholder="주소를 입력하세요"
-                />
+                <Input id="address" value={settings.address} onChange={(e) => update("address", e.target.value)} placeholder="주소를 입력하세요" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 히어로 섹션 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>히어로 섹션</CardTitle>
+            <CardDescription>메인 페이지 상단 히어로 영역의 텍스트, 이미지, 통계를 설정합니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* 배경 이미지 */}
+            <div className="space-y-2">
+              <Label>배경 이미지</Label>
+              {settings.hero_image_url ? (
+                <div className="flex items-center gap-4">
+                  <div className="w-48 h-28 rounded-lg border border-border overflow-hidden bg-muted">
+                    <img src={settings.hero_image_url} alt="히어로 배경" className="w-full h-full object-cover" />
+                  </div>
+                  <Button variant="outline" size="sm" onClick={handleRemoveHeroImage}>
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    이미지 삭제
+                  </Button>
+                </div>
+              ) : (
+                <FileUpload onUpload={handleHeroImageUpload} accept="image/*" type="image" />
+              )}
+              <p className="text-xs text-muted-foreground">이미지를 삭제하면 기본 이미지가 사용됩니다.</p>
+            </div>
+
+            {/* 텍스트 */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="hero_badge">뱃지 텍스트</Label>
+                <Input id="hero_badge" value={settings.hero_badge} onChange={(e) => update("hero_badge", e.target.value)} placeholder="상단 뱃지 텍스트" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hero_title">제목 (줄바꿈: \n 사용)</Label>
+              <Input id="hero_title" value={settings.hero_title} onChange={(e) => update("hero_title", e.target.value)} placeholder="히어로 제목" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hero_subtitle">부제목</Label>
+              <Textarea id="hero_subtitle" value={settings.hero_subtitle} onChange={(e) => update("hero_subtitle", e.target.value)} placeholder="히어로 부제목" rows={3} />
+            </div>
+
+            {/* 통계 */}
+            <div>
+              <Label className="mb-3 block">통계 항목 (4개)</Label>
+              <div className="grid gap-4 md:grid-cols-2">
+                {([1, 2, 3, 4] as const).map((n) => (
+                  <div key={n} className="flex gap-2">
+                    <div className="flex-1 space-y-1">
+                      <Label className="text-xs text-muted-foreground">라벨 {n}</Label>
+                      <Input
+                        value={settings[`hero_stat_${n}_label` as keyof SiteSettings] as string}
+                        onChange={(e) => update(`hero_stat_${n}_label` as keyof SiteSettings, e.target.value)}
+                        placeholder="라벨"
+                      />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <Label className="text-xs text-muted-foreground">값 {n}</Label>
+                      <Input
+                        value={settings[`hero_stat_${n}_value` as keyof SiteSettings] as string}
+                        onChange={(e) => update(`hero_stat_${n}_value` as keyof SiteSettings, e.target.value)}
+                        placeholder="값"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>

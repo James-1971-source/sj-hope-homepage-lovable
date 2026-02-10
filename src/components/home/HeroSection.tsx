@@ -1,9 +1,22 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Heart, ArrowRight, Phone } from "lucide-react";
-import heroImage from "@/assets/hero-youth.jpg";
+import heroImageDefault from "@/assets/hero-youth.jpg";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export default function HeroSection() {
+  const { settings } = useSiteSettings();
+
+  const heroImage = settings.hero_image_url || heroImageDefault;
+  const titleLines = (settings.hero_title || "청소년의 꿈과 희망을\n함께 키워갑니다").split("\n");
+
+  const stats = [
+    { label: settings.hero_stat_1_label, value: settings.hero_stat_1_value },
+    { label: settings.hero_stat_2_label, value: settings.hero_stat_2_value },
+    { label: settings.hero_stat_3_label, value: settings.hero_stat_3_value },
+    { label: settings.hero_stat_4_label, value: settings.hero_stat_4_value },
+  ];
+
   return (
     <section className="relative min-h-[600px] md:min-h-[700px] flex items-center">
       {/* Background Image */}
@@ -26,18 +39,18 @@ export default function HeroSection() {
         <div className="max-w-3xl">
           <div className="animate-fade-in">
             <span className="inline-block bg-primary-foreground/20 text-primary-foreground px-4 py-2 rounded-full text-sm font-medium mb-6 backdrop-blur-sm">
-              사단법인 S&J희망나눔
+              {settings.hero_badge}
             </span>
           </div>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-slide-up leading-tight">
-            청소년의 꿈과 희망을<br />
-            함께 키워갑니다
+            {titleLines.map((line, i) => (
+              <span key={i}>{line}{i < titleLines.length - 1 && <br />}</span>
+            ))}
           </h1>
           
           <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 max-w-2xl animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            교육, 상담, 문화 프로그램을 통해 청소년들이 건강하게 성장하고
-            밝은 미래를 꿈꿀 수 있도록 지원합니다.
+            {settings.hero_subtitle}
           </p>
 
           {/* CTA Buttons */}
@@ -65,12 +78,7 @@ export default function HeroSection() {
 
         {/* Stats */}
         <div className="mt-12 md:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-          {[
-            { label: "설립연도", value: "2015년" },
-            { label: "누적 수혜 청소년", value: "5,000+" },
-            { label: "진행 프로그램", value: "50+" },
-            { label: "자원봉사자", value: "300+" },
-          ].map((stat) => (
+          {stats.map((stat) => (
             <div
               key={stat.label}
               className="bg-primary-foreground/15 backdrop-blur-sm rounded-2xl p-4 md:p-6 text-center"
