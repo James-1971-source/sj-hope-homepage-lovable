@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Heart, Palette } from "lucide-react";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import programEducation from "@/assets/program-education.jpg";
 import programCounseling from "@/assets/program-counseling.jpg";
 import programCulture from "@/assets/program-culture.jpg";
@@ -33,19 +34,21 @@ const programs = [
 ];
 
 export default function ProgramsSection() {
+  const { settings } = useSiteSettings();
+
   return (
     <section className="section-padding bg-warm-cream">
       <div className="container-wide">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
           <span className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-4">
-            주요 사업
+            {settings.programs_badge}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            청소년을 위한 다양한 프로그램
+            {settings.programs_title}
           </h2>
           <p className="text-muted-foreground text-lg">
-            학습, 상담, 문화 등 종합적인 지원을 통해 청소년들의 성장을 돕습니다.
+            {settings.programs_subtitle}
           </p>
         </div>
 

@@ -30,6 +30,11 @@ export default function SiteSettingsAdmin() {
     hero_stat_3_value: "50+",
     hero_stat_4_label: "자원봉사자",
     hero_stat_4_value: "300+",
+    programs_badge: "주요 사업",
+    programs_title: "청소년을 위한 다양한 프로그램",
+    programs_subtitle: "학습, 상담, 문화 등 종합적인 지원을 통해 청소년들의 성장을 돕습니다.",
+    news_badge: "소식",
+    news_title: "공지사항 및 소식",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -269,6 +274,45 @@ export default function SiteSettingsAdmin() {
                   </div>
                 ))}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+        {/* 프로그램 소개 섹션 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>프로그램 소개 섹션</CardTitle>
+            <CardDescription>메인 페이지 '주요 사업' 영역의 뱃지, 제목, 부제목을 설정합니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="programs_badge">뱃지 텍스트</Label>
+              <Input id="programs_badge" value={settings.programs_badge} onChange={(e) => update("programs_badge", e.target.value)} placeholder="예: 주요 사업" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="programs_title">제목</Label>
+              <Input id="programs_title" value={settings.programs_title} onChange={(e) => update("programs_title", e.target.value)} placeholder="섹션 제목" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="programs_subtitle">부제목</Label>
+              <Textarea id="programs_subtitle" value={settings.programs_subtitle} onChange={(e) => update("programs_subtitle", e.target.value)} placeholder="섹션 부제목" rows={2} />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 뉴스 섹션 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>뉴스 섹션</CardTitle>
+            <CardDescription>메인 페이지 '공지사항 및 소식' 영역의 뱃지와 제목을 설정합니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="news_badge">뱃지 텍스트</Label>
+              <Input id="news_badge" value={settings.news_badge} onChange={(e) => update("news_badge", e.target.value)} placeholder="예: 소식" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="news_title">제목</Label>
+              <Input id="news_title" value={settings.news_title} onChange={(e) => update("news_title", e.target.value)} placeholder="섹션 제목" />
             </div>
           </CardContent>
         </Card>

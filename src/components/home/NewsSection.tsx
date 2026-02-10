@@ -5,6 +5,7 @@ import { ArrowRight, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 interface Post {
   id: string;
@@ -24,6 +25,7 @@ const categoryColors: Record<string, string> = {
 export default function NewsSection() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const { settings } = useSiteSettings();
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -88,10 +90,10 @@ export default function NewsSection() {
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
           <div>
             <span className="inline-block bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold mb-4">
-              소식
+              {settings.news_badge}
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-              공지사항 및 소식
+              {settings.news_title}
             </h2>
           </div>
           <Button variant="ghost" asChild>
