@@ -49,6 +49,7 @@ export default function SiteSettingsAdmin() {
     footer_sns_youtube: "",
     footer_sns_instagram: "",
     footer_sns_facebook: "",
+    hero_overlay_color: "#1e3a5f",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -222,6 +223,25 @@ export default function SiteSettingsAdmin() {
                 <FileUpload onUpload={handleHeroImageUpload} accept="image/*" type="image" />
               )}
               <p className="text-xs text-muted-foreground">이미지를 삭제하면 기본 이미지가 사용됩니다.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="hero_overlay_color">배경 오버레이 색상</Label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  id="hero_overlay_color"
+                  value={settings.hero_overlay_color}
+                  onChange={(e) => update("hero_overlay_color", e.target.value)}
+                  className="w-12 h-10 rounded cursor-pointer border border-border"
+                />
+                <Input
+                  value={settings.hero_overlay_color}
+                  onChange={(e) => update("hero_overlay_color", e.target.value)}
+                  placeholder="#1e3a5f"
+                  className="max-w-[200px]"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground">히어로 섹션 배경 이미지 위에 씌워지는 오버레이 색상입니다.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Heart, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Heart, MapPin, Phone, Mail, Clock, Globe, Youtube, Instagram, Facebook } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const footerLinks = {
@@ -33,10 +33,10 @@ export default function Footer() {
   const { settings } = useSiteSettings();
 
   const snsLinks = [
-    { name: "Blog", url: settings.footer_sns_blog },
-    { name: "YouTube", url: settings.footer_sns_youtube },
-    { name: "Instagram", url: settings.footer_sns_instagram },
-    { name: "Facebook", url: settings.footer_sns_facebook },
+    { name: "Blog", url: settings.footer_sns_blog, icon: Globe },
+    { name: "YouTube", url: settings.footer_sns_youtube, icon: Youtube },
+    { name: "Instagram", url: settings.footer_sns_instagram, icon: Instagram },
+    { name: "Facebook", url: settings.footer_sns_facebook, icon: Facebook },
   ].filter((s) => s.url);
 
   return (
@@ -116,17 +116,21 @@ export default function Footer() {
             {/* SNS Links */}
             {snsLinks.length > 0 && (
               <div className="flex items-center gap-3 mt-4">
-                {snsLinks.map((sns) => (
-                  <a
-                    key={sns.name}
-                    href={sns.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-secondary-foreground/70 hover:text-primary-foreground transition-colors underline"
-                  >
-                    {sns.name}
-                  </a>
-                ))}
+                {snsLinks.map((sns) => {
+                  const Icon = sns.icon;
+                  return (
+                    <a
+                      key={sns.name}
+                      href={sns.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-full bg-secondary-foreground/10 flex items-center justify-center text-secondary-foreground/70 hover:text-primary-foreground hover:bg-secondary-foreground/20 transition-colors"
+                      title={sns.name}
+                    >
+                      <Icon className="h-4 w-4" />
+                    </a>
+                  );
+                })}
               </div>
             )}
           </div>
