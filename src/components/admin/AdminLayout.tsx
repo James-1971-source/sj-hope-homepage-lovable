@@ -17,6 +17,7 @@ import {
   X,
   Settings,
   Building2,
+  Layers,
 } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ const navItems = [
   { path: "/admin/settings", label: "사이트 설정", icon: Settings },
   { path: "/admin/banners", label: "배너 관리", icon: Images },
   { path: "/admin/pages", label: "페이지 관리", icon: Building2 },
+  { path: "/admin/homepage-programs", label: "메인 사업소개", icon: Layers },
   { path: "/admin/posts", label: "공지/소식", icon: FileText },
   { path: "/admin/programs", label: "사업소개", icon: BookOpen },
   { path: "/admin/gallery", label: "갤러리", icon: Images },
