@@ -24,6 +24,21 @@ export interface SiteSettings {
   programs_subtitle: string;
   news_badge: string;
   news_title: string;
+  // Footer fields
+  footer_org_name: string;
+  footer_org_subtitle: string;
+  footer_address: string;
+  footer_phone: string;
+  footer_email: string;
+  footer_work_hours: string;
+  footer_org_number: string;
+  footer_copyright: string;
+  footer_cta_title: string;
+  footer_cta_subtitle: string;
+  footer_sns_blog: string;
+  footer_sns_youtube: string;
+  footer_sns_instagram: string;
+  footer_sns_facebook: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -49,6 +64,20 @@ const defaultSettings: SiteSettings = {
   programs_subtitle: "학습, 상담, 문화 등 종합적인 지원을 통해 청소년들의 성장을 돕습니다.",
   news_badge: "소식",
   news_title: "공지사항 및 소식",
+  footer_org_name: "S&J희망나눔",
+  footer_org_subtitle: "사단법인 에스엔제이희망나눔",
+  footer_address: "대구시 중구 동덕로 115, 진석타워 9층 906호",
+  footer_phone: "053-428-7942",
+  footer_email: "sjfoundation@sj-hs.or.kr",
+  footer_work_hours: "평일 10:00 - 18:00 (근무 요일: 화~금)\n점심시간 12:00 - 13:00",
+  footer_org_number: "고유번호: 463-82-00186",
+  footer_copyright: "© 2026 사단법인 S&J희망나눔. All rights reserved.",
+  footer_cta_title: "함께하면 더 큰 희망이 됩니다",
+  footer_cta_subtitle: "청소년들의 밝은 미래를 위한 여러분의 따뜻한 관심이 필요합니다.",
+  footer_sns_blog: "",
+  footer_sns_youtube: "",
+  footer_sns_instagram: "",
+  footer_sns_facebook: "",
 };
 
 export function useSiteSettings() {
