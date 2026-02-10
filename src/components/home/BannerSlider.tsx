@@ -68,7 +68,7 @@ export default function BannerSlider() {
             <img
               src={banner.image_url}
               alt={banner.title || "배너"}
-              className="w-full h-[200px] md:h-[300px] lg:h-[400px] object-contain"
+              className="w-full h-auto block"
             />
           </div>
         ))}
