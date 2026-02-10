@@ -9,6 +9,8 @@ import { ChevronRight, Heart, Gift, CreditCard, Building, Check } from "lucide-r
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { donationSchema } from "@/lib/formSchemas";
+import { z } from "zod";
 
 const donationAmounts = [10000, 30000, 50000, 100000];
 
@@ -30,20 +32,36 @@ export default function Donate() {
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
-    const { error } = await supabase.from("donation_inquiries").insert({
+    const data = {
       name: formData.get("name") as string,
       phone: formData.get("phone") as string,
-      email: formData.get("email") as string,
+      email: (formData.get("email") as string) || "",
       donation_type: donationType === "regular" ? "정기후원" : "일시후원",
-      message: formData.get("message") as string,
-    });
-    
-    setIsSubmitting(false);
-    if (error) {
-      toast.error("오류가 발생했습니다. 다시 시도해주세요.");
-    } else {
-      toast.success("후원 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
-      (e.target as HTMLFormElement).reset();
+      message: (formData.get("message") as string) || "",
+    };
+
+    try {
+      const validated = donationSchema.parse(data);
+      const { error } = await supabase.from("donation_inquiries").insert({
+        name: validated.name,
+        phone: validated.phone,
+        email: validated.email || null,
+        donation_type: validated.donation_type,
+        message: validated.message || null,
+      });
+      
+      setIsSubmitting(false);
+      if (error) {
+        toast.error("오류가 발생했습니다. 다시 시도해주세요.");
+      } else {
+        toast.success("후원 신청이 접수되었습니다. 담당자가 곧 연락드리겠습니다.");
+        (e.target as HTMLFormElement).reset();
+      }
+    } catch (err) {
+      setIsSubmitting(false);
+      if (err instanceof z.ZodError) {
+        toast.error(err.errors[0].message);
+      }
     }
   };
 
