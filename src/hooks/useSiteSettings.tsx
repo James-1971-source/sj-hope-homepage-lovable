@@ -19,6 +19,11 @@ export interface SiteSettings {
   hero_stat_3_value: string;
   hero_stat_4_label: string;
   hero_stat_4_value: string;
+  programs_badge: string;
+  programs_title: string;
+  programs_subtitle: string;
+  news_badge: string;
+  news_title: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -39,6 +44,11 @@ const defaultSettings: SiteSettings = {
   hero_stat_3_value: "50+",
   hero_stat_4_label: "자원봉사자",
   hero_stat_4_value: "300+",
+  programs_badge: "주요 사업",
+  programs_title: "청소년을 위한 다양한 프로그램",
+  programs_subtitle: "학습, 상담, 문화 등 종합적인 지원을 통해 청소년들의 성장을 돕습니다.",
+  news_badge: "소식",
+  news_title: "공지사항 및 소식",
 };
 
 export function useSiteSettings() {
