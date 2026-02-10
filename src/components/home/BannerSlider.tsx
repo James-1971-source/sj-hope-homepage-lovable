@@ -63,7 +63,7 @@ export default function BannerSlider() {
           <div
             key={banner.id}
             className="min-w-full cursor-pointer"
-            style={{ aspectRatio: '1920 / 400' }}
+            style={{ aspectRatio: '1920 / 600' }}
             onClick={() => handleClick(banner)}
           >
             <img
