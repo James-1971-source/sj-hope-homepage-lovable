@@ -29,6 +29,7 @@ import VolunteersAdmin from "./pages/admin/VolunteersAdmin";
 import MessagesAdmin from "./pages/admin/MessagesAdmin";
 import NotFound from "./pages/NotFound";
 import HomepageProgramsAdmin from "./pages/admin/HomepageProgramsAdmin";
+import PolicyPage from "./pages/PolicyPage";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,8 @@ const App = () => (
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<PolicyPage />} />
+            <Route path="/terms" element={<PolicyPage />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/settings" element={<SiteSettingsAdmin />} />
