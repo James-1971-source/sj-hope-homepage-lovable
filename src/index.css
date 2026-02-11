@@ -12,10 +12,10 @@
 
 @layer base {
   :root {
-    /* Primary: 따뜻한 코랄/오렌지 - 희망과 에너지 */
-    --primary: 16 85% 55%;
+    /* Primary: S&J 시그니처 오렌지 (Pantone 144C, #F79332) */
+    --primary: 30 93% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 16 85% 48%;
+    --primary-hover: 30 93% 50%;
     
     /* Secondary: 신뢰의 네이비 */
     --secondary: 220 60% 25%;
@@ -42,7 +42,7 @@
     /* Borders & Inputs */
     --border: 30 20% 88%;
     --input: 30 20% 88%;
-    --ring: 16 85% 55%;
+    --ring: 30 93% 58%;
     
     /* Destructive */
     --destructive: 0 72% 51%;
@@ -58,9 +58,9 @@
     --success-foreground: 0 0% 100%;
     
     /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(16 85% 55% / 0.9), hsl(25 90% 50% / 0.85));
+    --gradient-hero: linear-gradient(135deg, hsl(30 93% 58% / 0.9), hsl(35 90% 52% / 0.85));
     --gradient-warm: linear-gradient(180deg, hsl(30 50% 98%), hsl(40 60% 96%));
-    --gradient-cta: linear-gradient(135deg, hsl(16 85% 55%), hsl(25 90% 50%));
+    --gradient-cta: linear-gradient(135deg, hsl(30 93% 58%), hsl(35 90% 52%));
     
     /* Shadows */
     --shadow-sm: 0 1px 3px hsl(220 25% 15% / 0.08);
@@ -72,16 +72,16 @@
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 220 25% 15%;
-    --sidebar-primary: 16 85% 55%;
+    --sidebar-primary: 30 93% 58%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 30 20% 94%;
     --sidebar-accent-foreground: 220 25% 15%;
     --sidebar-border: 30 20% 88%;
-    --sidebar-ring: 16 85% 55%;
+    --sidebar-ring: 30 93% 58%;
   }
 
   .dark {
-    --primary: 16 80% 60%;
+    --primary: 30 88% 65%;
     --primary-foreground: 0 0% 100%;
     
     --secondary: 220 40% 40%;
@@ -104,7 +104,7 @@
     
     --border: 220 20% 20%;
     --input: 220 20% 20%;
-    --ring: 16 80% 60%;
+    --ring: 30 88% 65%;
     
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -114,12 +114,12 @@
     
     --sidebar-background: 220 25% 10%;
     --sidebar-foreground: 30 20% 95%;
-    --sidebar-primary: 16 80% 60%;
+    --sidebar-primary: 30 88% 65%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 20% 18%;
     --sidebar-accent-foreground: 30 20% 95%;
     --sidebar-border: 220 20% 20%;
-    --sidebar-ring: 16 80% 60%;
+    --sidebar-ring: 30 88% 65%;
   }
 }
 
