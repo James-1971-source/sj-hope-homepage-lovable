@@ -53,6 +53,14 @@ export default function SiteSettingsAdmin() {
     contact_fax: "",
     contact_map_embed: "",
     contact_transport: "",
+    donate_bank_name: "신한은행",
+    donate_account_number: "XXX-XXX-XXXXXX",
+    donate_account_holder: "사단법인 S&J희망나눔",
+    donate_benefits: "기부금 영수증 발급\n후원 소식지 발송 (분기별)\n연간 활동보고서 제공\n후원자 감사 행사 초대",
+    donate_usage: "청소년 학습지원 프로그램 운영\n상담 및 복지 서비스 제공\n문화·체험 활동 지원\n교육 자료 및 시설 개선",
+    donate_contact_phone: "02-XXX-XXXX",
+    donate_contact_email: "contact@sj-hs.or.kr",
+    organization_image_url: null,
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -230,21 +238,31 @@ export default function SiteSettingsAdmin() {
             <div className="space-y-2">
               <Label htmlFor="hero_overlay_color">배경 오버레이 색상</Label>
               <div className="flex items-center gap-3">
-                <input
-                  type="color"
-                  id="hero_overlay_color"
-                  value={settings.hero_overlay_color}
-                  onChange={(e) => update("hero_overlay_color", e.target.value)}
-                  className="w-12 h-10 rounded cursor-pointer border border-border"
-                />
+                {settings.hero_overlay_color && settings.hero_overlay_color !== "none" && (
+                  <input
+                    type="color"
+                    id="hero_overlay_color"
+                    value={settings.hero_overlay_color}
+                    onChange={(e) => update("hero_overlay_color", e.target.value)}
+                    className="w-12 h-10 rounded cursor-pointer border border-border"
+                  />
+                )}
                 <Input
-                  value={settings.hero_overlay_color}
-                  onChange={(e) => update("hero_overlay_color", e.target.value)}
-                  placeholder="#1e3a5f"
+                  value={settings.hero_overlay_color === "none" ? "" : settings.hero_overlay_color}
+                  onChange={(e) => update("hero_overlay_color", e.target.value || "none")}
+                  placeholder="컬러 없음"
                   className="max-w-[200px]"
                 />
+                <Button
+                  type="button"
+                  variant={settings.hero_overlay_color === "none" || !settings.hero_overlay_color ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => update("hero_overlay_color", settings.hero_overlay_color === "none" ? "#1e3a5f" : "none")}
+                >
+                  {settings.hero_overlay_color === "none" || !settings.hero_overlay_color ? "컬러 없음 ✓" : "컬러 없음"}
+                </Button>
               </div>
-              <p className="text-xs text-muted-foreground">히어로 섹션 배경 이미지 위에 씌워지는 오버레이 색상입니다.</p>
+              <p className="text-xs text-muted-foreground">오버레이를 제거하려면 '컬러 없음' 버튼을 클릭하세요.</p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
@@ -387,6 +405,48 @@ export default function SiteSettingsAdmin() {
               <div className="space-y-2">
                 <Label htmlFor="footer_copyright">저작권 문구</Label>
                 <Input id="footer_copyright" value={settings.footer_copyright} onChange={(e) => update("footer_copyright", e.target.value)} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 후원 페이지 설정 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>후원 페이지 설정</CardTitle>
+            <CardDescription>후원 페이지 오른쪽 영역의 계좌안내, 후원혜택, 사용처, 문의 정보를 설정합니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-2">
+                <Label htmlFor="donate_bank_name">은행명</Label>
+                <Input id="donate_bank_name" value={settings.donate_bank_name} onChange={(e) => update("donate_bank_name", e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="donate_account_number">계좌번호</Label>
+                <Input id="donate_account_number" value={settings.donate_account_number} onChange={(e) => update("donate_account_number", e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="donate_account_holder">예금주</Label>
+                <Input id="donate_account_holder" value={settings.donate_account_holder} onChange={(e) => update("donate_account_holder", e.target.value)} />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="donate_benefits">후원 혜택 (줄바꿈으로 구분)</Label>
+              <Textarea id="donate_benefits" value={settings.donate_benefits} onChange={(e) => update("donate_benefits", e.target.value)} rows={4} placeholder="기부금 영수증 발급&#10;후원 소식지 발송" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="donate_usage">후원금 사용처 (줄바꿈으로 구분)</Label>
+              <Textarea id="donate_usage" value={settings.donate_usage} onChange={(e) => update("donate_usage", e.target.value)} rows={4} placeholder="청소년 학습지원 프로그램 운영&#10;상담 및 복지 서비스 제공" />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="donate_contact_phone">후원 문의 전화번호</Label>
+                <Input id="donate_contact_phone" value={settings.donate_contact_phone} onChange={(e) => update("donate_contact_phone", e.target.value)} />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="donate_contact_email">후원 문의 이메일</Label>
+                <Input id="donate_contact_email" value={settings.donate_contact_email} onChange={(e) => update("donate_contact_email", e.target.value)} />
               </div>
             </div>
           </CardContent>

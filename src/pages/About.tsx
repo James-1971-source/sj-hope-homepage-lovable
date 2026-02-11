@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { Target, Eye, Users, ChevronRight } from "lucide-react";
 import { usePageContents, useHistoryItems, useOrganizationItems, useFacilities } from "@/hooks/usePageContents";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useState, useMemo } from "react";
 
@@ -11,6 +12,7 @@ export default function About() {
   const { getContent, loading: contentLoading } = usePageContents("about");
   const { items: historyItems, loading: historyLoading } = useHistoryItems();
   const { items: organizationItems, loading: orgLoading } = useOrganizationItems();
+  const { settings } = useSiteSettings();
   const { items: facilities, loading: facilitiesLoading } = useFacilities();
 
   const path = location.pathname;
@@ -97,11 +99,25 @@ export default function About() {
           <div className="container-wide">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">인사말</h2>
-              <div className="prose prose-lg max-w-none text-muted-foreground">
-                {greetingContent?.content?.split('\n').map((paragraph, idx) => (
-                  <p key={idx} className="leading-relaxed mb-4">{paragraph}</p>
-                ))}
-              </div>
+              {greetingContent?.content?.startsWith('<') ? (
+                <div 
+                  className="prose prose-lg max-w-none text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: greetingContent.content }}
+                />
+              ) : (
+                <div className="prose prose-lg max-w-none text-muted-foreground">
+                  {greetingContent?.content?.split('\n').map((paragraph, idx) => (
+                    <p key={idx} className="leading-relaxed mb-4">{paragraph}</p>
+                  ))}
+                </div>
+              )}
+              {greetingContent?.images && greetingContent.images.length > 0 && (
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {greetingContent.images.map((img, idx) => (
+                    <img key={idx} src={img} alt={`인사말 이미지 ${idx + 1}`} className="rounded-2xl w-full object-cover" />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -206,31 +222,41 @@ export default function About() {
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">조직도</h2>
             </div>
             <div className="max-w-4xl mx-auto">
-              <div className="card-warm p-8 text-center">
-                {organizationItems.filter(o => o.level === 0).map((item) => (
-                  <div key={item.id} className="inline-block bg-secondary text-secondary-foreground px-8 py-4 rounded-xl font-bold text-lg mb-8">
-                    {item.name}
-                  </div>
-                ))}
-                {organizationItems.filter(o => o.level === 1).length > 0 && (
-                  <div className="flex justify-center mb-8"><div className="w-0.5 h-8 bg-border" /></div>
-                )}
-                {organizationItems.filter(o => o.level === 1).map((item) => (
-                  <div key={item.id} className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg mb-8">
-                    {item.name}
-                  </div>
-                ))}
-                {organizationItems.filter(o => o.level === 2).length > 0 && (
-                  <div className="flex justify-center mb-8"><div className="w-0.5 h-8 bg-border" /></div>
-                )}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {organizationItems.filter(o => o.level === 2).map((item) => (
-                    <div key={item.id} className="bg-muted px-4 py-3 rounded-xl font-medium text-foreground">
+              {settings.organization_image_url ? (
+                <div className="card-warm p-8 text-center">
+                  <img 
+                    src={settings.organization_image_url} 
+                    alt="조직도" 
+                    className="w-full max-w-3xl mx-auto rounded-xl"
+                  />
+                </div>
+              ) : (
+                <div className="card-warm p-8 text-center">
+                  {organizationItems.filter(o => o.level === 0).map((item) => (
+                    <div key={item.id} className="inline-block bg-secondary text-secondary-foreground px-8 py-4 rounded-xl font-bold text-lg mb-8">
                       {item.name}
                     </div>
                   ))}
+                  {organizationItems.filter(o => o.level === 1).length > 0 && (
+                    <div className="flex justify-center mb-8"><div className="w-0.5 h-8 bg-border" /></div>
+                  )}
+                  {organizationItems.filter(o => o.level === 1).map((item) => (
+                    <div key={item.id} className="inline-block bg-primary text-primary-foreground px-8 py-4 rounded-xl font-bold text-lg mb-8">
+                      {item.name}
+                    </div>
+                  ))}
+                  {organizationItems.filter(o => o.level === 2).length > 0 && (
+                    <div className="flex justify-center mb-8"><div className="w-0.5 h-8 bg-border" /></div>
+                  )}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {organizationItems.filter(o => o.level === 2).map((item) => (
+                      <div key={item.id} className="bg-muted px-4 py-3 rounded-xl font-medium text-foreground">
+                        {item.name}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </section>

@@ -43,6 +43,14 @@ export interface SiteSettings {
   contact_fax: string;
   contact_map_embed: string;
   contact_transport: string;
+  donate_bank_name: string;
+  donate_account_number: string;
+  donate_account_holder: string;
+  donate_benefits: string;
+  donate_usage: string;
+  donate_contact_phone: string;
+  donate_contact_email: string;
+  organization_image_url: string | null;
 }
 
 const defaultSettings: SiteSettings = {
@@ -86,6 +94,14 @@ const defaultSettings: SiteSettings = {
   contact_fax: "",
   contact_map_embed: "",
   contact_transport: "대중교통: 대구 지하철 1호선 중앙로역 3번 출구에서 도보 5분\n버스: 동덕로 정류장 하차",
+  donate_bank_name: "신한은행",
+  donate_account_number: "XXX-XXX-XXXXXX",
+  donate_account_holder: "사단법인 S&J희망나눔",
+  donate_benefits: "기부금 영수증 발급\n후원 소식지 발송 (분기별)\n연간 활동보고서 제공\n후원자 감사 행사 초대",
+  donate_usage: "청소년 학습지원 프로그램 운영\n상담 및 복지 서비스 제공\n문화·체험 활동 지원\n교육 자료 및 시설 개선",
+  donate_contact_phone: "02-XXX-XXXX",
+  donate_contact_email: "contact@sj-hs.or.kr",
+  organization_image_url: null,
 };
 
 export function useSiteSettings() {

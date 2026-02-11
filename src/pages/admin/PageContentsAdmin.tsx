@@ -47,6 +47,45 @@ interface Facility {
   display_order: number;
 }
 
+function OrgImageUpload() {
+  const [orgImageUrl, setOrgImageUrl] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    supabase.from("site_settings").select("value").eq("key", "organization_image_url").single().then(({ data }) => {
+      if (data?.value) setOrgImageUrl(data.value);
+      setLoaded(true);
+    });
+  }, []);
+
+  const handleSaveOrgImage = async (url: string | null) => {
+    setOrgImageUrl(url);
+    const { error } = await supabase
+      .from("site_settings")
+      .upsert({ key: "organization_image_url", value: url }, { onConflict: "key" });
+    if (error) { toast.error("저장 실패"); return; }
+    toast.success("조직도 이미지가 저장되었습니다.");
+  };
+
+  if (!loaded) return <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />;
+
+  return (
+    <div className="space-y-4">
+      {orgImageUrl ? (
+        <div className="space-y-3">
+          <img src={orgImageUrl} alt="조직도" className="max-w-full rounded-lg border" />
+          <Button variant="outline" size="sm" onClick={() => handleSaveOrgImage(null)}>
+            <Trash2 className="h-4 w-4 mr-2" />
+            이미지 삭제
+          </Button>
+        </div>
+      ) : (
+        <FileUpload onUpload={(url) => handleSaveOrgImage(url)} accept="image/*" type="image" />
+      )}
+    </div>
+  );
+}
+
 export default function PageContentsAdmin() {
   const [pageContents, setPageContents] = useState<PageContent[]>([]);
   const [historyItems, setHistoryItems] = useState<HistoryItem[]>([]);
@@ -300,7 +339,7 @@ export default function PageContentsAdmin() {
             <Card>
               <CardHeader>
                 <CardTitle>인사말</CardTitle>
-                <CardDescription>기관장 인사말을 작성합니다.</CardDescription>
+                <CardDescription>기관장 인사말을 작성합니다. HTML을 지원하여 제목 크기, 굵기, 이탤릭 등을 지정할 수 있습니다.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {(() => {
@@ -309,8 +348,106 @@ export default function PageContentsAdmin() {
                   return (
                     <>
                       <div className="space-y-2">
+                        <Label>이미지</Label>
+                        {content.images && content.images.length > 0 && (
+                          <div className="flex gap-2 mb-2 flex-wrap">
+                            {content.images.map((img, idx) => (
+                              <div key={idx} className="relative w-32 h-24 rounded overflow-hidden border">
+                                <img src={img} alt="" className="w-full h-full object-cover" />
+                                <button
+                                  onClick={() => {
+                                    const updated = pageContents.map(c =>
+                                      c.section_key === "greeting" ? { ...c, images: c.images.filter((_, i) => i !== idx) } : c
+                                    );
+                                    setPageContents(updated);
+                                  }}
+                                  className="absolute top-0 right-0 p-0.5 bg-destructive text-destructive-foreground rounded-bl"
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        <MultiFileUpload
+                          urls={content.images || []}
+                          onUrlsChange={(newUrls) => {
+                            const updated = pageContents.map(c =>
+                              c.section_key === "greeting" ? { ...c, images: newUrls } : c
+                            );
+                            setPageContents(updated);
+                          }}
+                          accept="image/*"
+                          type="image"
+                        />
+                        <p className="text-xs text-muted-foreground">인사말 페이지에 표시될 이미지를 업로드하세요.</p>
+                      </div>
+                      <div className="space-y-2">
                         <Label>내용</Label>
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<h2>${sel || '제목'}</h2>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>H2 제목</Button>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<h3>${sel || '소제목'}</h3>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>H3 소제목</Button>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<strong>${sel || '굵은 텍스트'}</strong>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>B 굵게</Button>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<em>${sel || '이탤릭'}</em>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>I 이탤릭</Button>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<span style="font-size:1.25rem">${sel || '큰 텍스트'}</span>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>크게</Button>
+                          <Button type="button" variant="outline" size="sm" onClick={() => {
+                            const ta = document.getElementById('greeting-textarea') as HTMLTextAreaElement;
+                            if (!ta) return;
+                            const start = ta.selectionStart;
+                            const end = ta.selectionEnd;
+                            const sel = ta.value.substring(start, end);
+                            const newVal = ta.value.substring(0, start) + `<span style="font-size:0.875rem">${sel || '작은 텍스트'}</span>` + ta.value.substring(end);
+                            const updated = pageContents.map(c => c.section_key === "greeting" ? { ...c, content: newVal } : c);
+                            setPageContents(updated);
+                          }}>작게</Button>
+                        </div>
                         <Textarea
+                          id="greeting-textarea"
                           value={content.content || ""}
                           onChange={(e) => {
                             const updated = pageContents.map(c =>
@@ -319,10 +456,17 @@ export default function PageContentsAdmin() {
                             setPageContents(updated);
                           }}
                           rows={15}
-                          placeholder="인사말 내용을 입력하세요"
+                          placeholder="인사말 내용을 입력하세요. HTML 태그 사용 가능 (예: <h2>제목</h2>, <strong>굵게</strong>)"
                         />
-                        <p className="text-xs text-muted-foreground">줄바꿈은 그대로 반영됩니다.</p>
+                        <p className="text-xs text-muted-foreground">HTML 태그를 사용하여 텍스트 크기, 굵기, 스타일을 지정할 수 있습니다. 줄바꿈은 &lt;br&gt; 또는 &lt;p&gt; 태그를 사용하세요.</p>
                       </div>
+                      {/* 미리보기 */}
+                      {content.content && content.content.startsWith('<') && (
+                        <div className="space-y-2">
+                          <Label>미리보기</Label>
+                          <div className="p-4 border rounded-lg prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content.content }} />
+                        </div>
+                      )}
                       <Button onClick={() => handleSaveContent(content)} disabled={saving}>
                         <Save className="h-4 w-4 mr-2" />
                         저장
@@ -517,14 +661,37 @@ export default function PageContentsAdmin() {
 
           {/* 조직도 탭 */}
           <TabsContent value="organization" className="space-y-4">
-            <div className="flex justify-end">
-              <Button onClick={handleAddOrganization}>
-                <Plus className="h-4 w-4 mr-2" />
-                조직 추가
-              </Button>
-            </div>
+            {/* 조직도 이미지 업로드 */}
             <Card>
-              <CardContent className="pt-6">
+              <CardHeader>
+                <CardTitle>조직도 이미지</CardTitle>
+                <CardDescription>복잡한 조직도는 이미지로 업로드하세요. 이미지가 등록되면 이미지가 우선 표시됩니다.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  // We'll use a local state approach via site_settings
+                  return (
+                    <>
+                      <OrgImageUpload />
+                    </>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+
+            {/* 기존 조직도 데이터 (폴백) */}
+            <Card>
+              <CardHeader>
+                <CardTitle>조직도 데이터 (이미지 없을 때 표시)</CardTitle>
+                <CardDescription>조직도 이미지가 없을 경우 아래 데이터로 표시됩니다.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex justify-end mb-4">
+                  <Button onClick={handleAddOrganization} size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    조직 추가
+                  </Button>
+                </div>
                 <div className="space-y-4">
                   {organizationItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-4 p-4 border rounded-lg">
