@@ -10,9 +10,11 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { contactSchema } from "@/lib/formSchemas";
 import { z } from "zod";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { settings, loading: settingsLoading } = useSiteSettings();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,6 +51,9 @@ export default function Contact() {
       }
     }
   };
+
+  // Parse work hours for display (replace \n with <br>)
+  const workHoursLines = settings.footer_work_hours.split("\n");
 
   return (
     <Layout>
@@ -104,9 +109,9 @@ export default function Contact() {
                     required
                   />
                 </div>
-                <Button type="submit" size="lg" className="w-full sm:w-auto">
+                <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={isSubmitting}>
                   <Send className="h-4 w-4" />
-                  문의 보내기
+                  {isSubmitting ? "보내는 중..." : "문의 보내기"}
                 </Button>
               </form>
             </div>
@@ -121,10 +126,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">주소</h3>
-                    <p className="text-muted-foreground">
-                      서울특별시 OO구 OO로 123, 4층<br />
-                      (OO동, OO빌딩)
-                    </p>
+                    <p className="text-muted-foreground">{settings.footer_address}</p>
                   </div>
                 </div>
 
@@ -135,8 +137,10 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">전화</h3>
                     <p className="text-muted-foreground">
-                      02-XXX-XXXX<br />
-                      FAX: 02-XXX-XXXX
+                      {settings.footer_phone}
+                      {settings.contact_fax && (
+                        <><br />FAX: {settings.contact_fax}</>
+                      )}
                     </p>
                   </div>
                 </div>
@@ -147,9 +151,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">이메일</h3>
-                    <p className="text-muted-foreground">
-                      contact@sj-hs.or.kr
-                    </p>
+                    <p className="text-muted-foreground">{settings.footer_email}</p>
                   </div>
                 </div>
 
@@ -160,9 +162,9 @@ export default function Contact() {
                   <div>
                     <h3 className="font-semibold text-foreground mb-1">운영시간</h3>
                     <p className="text-muted-foreground">
-                      평일: 09:00 - 18:00<br />
-                      점심시간: 12:00 - 13:00<br />
-                      주말 및 공휴일 휴무
+                      {workHoursLines.map((line, i) => (
+                        <span key={i}>{line}{i < workHoursLines.length - 1 && <br />}</span>
+                      ))}
                     </p>
                   </div>
                 </div>
@@ -171,22 +173,37 @@ export default function Contact() {
               {/* Map */}
               <h2 className="text-2xl font-bold text-foreground mb-6">오시는 길</h2>
               <div className="card-warm p-0 overflow-hidden">
-                <div className="aspect-[4/3] bg-muted flex items-center justify-center">
-                  {/* Placeholder for map - in production, embed actual map */}
-                  <div className="text-center p-8">
-                    <MapPin className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">
-                      지도가 여기에 표시됩니다.<br />
-                      (카카오맵 또는 네이버 지도 임베드)
+                <div className="aspect-[4/3]">
+                  {settings.contact_map_embed ? (
+                    <iframe
+                      src={settings.contact_map_embed}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="오시는 길 지도"
+                    />
+                  ) : (
+                    <iframe
+                      src="https://map.naver.com/p/search/%EB%8C%80%EA%B5%AC%EC%8B%9C%20%EC%A4%91%EA%B5%AC%20%EB%8F%99%EB%8D%95%EB%A1%9C%20115?c=15.00,0,0,0,dh"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      title="오시는 길 지도"
+                    />
+                  )}
+                </div>
+                {settings.contact_transport && (
+                  <div className="p-4 bg-muted/50">
+                    <p className="text-sm text-muted-foreground whitespace-pre-line">
+                      {settings.contact_transport}
                     </p>
                   </div>
-                </div>
-                <div className="p-4 bg-muted/50">
-                  <p className="text-sm text-muted-foreground">
-                    <strong>대중교통:</strong> 지하철 O호선 OO역 O번 출구에서 도보 5분<br />
-                    <strong>버스:</strong> OOO, OOO, OOO번 버스 OO정류장 하차
-                  </p>
-                </div>
+                )}
               </div>
             </div>
           </div>

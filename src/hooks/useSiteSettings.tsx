@@ -40,6 +40,9 @@ export interface SiteSettings {
   footer_sns_instagram: string;
   footer_sns_facebook: string;
   hero_overlay_color: string;
+  contact_fax: string;
+  contact_map_embed: string;
+  contact_transport: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -80,6 +83,9 @@ const defaultSettings: SiteSettings = {
   footer_sns_instagram: "",
   footer_sns_facebook: "",
   hero_overlay_color: "#1e3a5f",
+  contact_fax: "",
+  contact_map_embed: "",
+  contact_transport: "대중교통: 대구 지하철 1호선 중앙로역 3번 출구에서 도보 5분\n버스: 동덕로 정류장 하차",
 };
 
 export function useSiteSettings() {
