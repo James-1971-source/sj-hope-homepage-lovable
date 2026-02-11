@@ -26,12 +26,14 @@ export default function HeroSection() {
           alt="S&J희망나눔 청소년 활동"
           className="w-full h-full object-cover"
         />
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: `linear-gradient(135deg, ${settings.hero_overlay_color}e6 0%, ${settings.hero_overlay_color}cc 50%, ${settings.hero_overlay_color}d9 100%)`
-          }}
-        />
+        {settings.hero_overlay_color && settings.hero_overlay_color !== "none" && (
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(135deg, ${settings.hero_overlay_color}e6 0%, ${settings.hero_overlay_color}cc 50%, ${settings.hero_overlay_color}d9 100%)`
+            }}
+          />
+        )}
       </div>
 
       {/* Content */}

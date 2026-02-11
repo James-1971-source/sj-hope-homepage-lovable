@@ -11,17 +11,12 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { donationSchema } from "@/lib/formSchemas";
 import { z } from "zod";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 
 const donationAmounts = [10000, 30000, 50000, 100000];
 
-const benefits = [
-  "기부금 영수증 발급",
-  "후원 소식지 발송 (분기별)",
-  "연간 활동보고서 제공",
-  "후원자 감사 행사 초대",
-];
-
 export default function Donate() {
+  const { settings } = useSiteSettings();
   const [donationType, setDonationType] = useState("regular");
   const [amount, setAmount] = useState(30000);
   const [customAmount, setCustomAmount] = useState("");
@@ -215,15 +210,15 @@ export default function Donate() {
                 <div className="space-y-3">
                   <div>
                     <p className="text-sm text-muted-foreground">은행</p>
-                    <p className="font-semibold text-foreground">신한은행</p>
+                    <p className="font-semibold text-foreground">{settings.donate_bank_name}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">계좌번호</p>
-                    <p className="font-semibold text-foreground">XXX-XXX-XXXXXX</p>
+                    <p className="font-semibold text-foreground">{settings.donate_account_number}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">예금주</p>
-                    <p className="font-semibold text-foreground">사단법인 S&J희망나눔</p>
+                    <p className="font-semibold text-foreground">{settings.donate_account_holder}</p>
                   </div>
                 </div>
               </div>
@@ -235,7 +230,7 @@ export default function Donate() {
                   후원 혜택
                 </h3>
                 <ul className="space-y-3">
-                  {benefits.map((benefit) => (
+                  {settings.donate_benefits.split('\n').filter(Boolean).map((benefit) => (
                     <li key={benefit} className="flex items-start gap-2">
                       <Check className="h-5 w-5 text-success flex-shrink-0 mt-0.5" />
                       <span className="text-muted-foreground">{benefit}</span>
@@ -250,10 +245,9 @@ export default function Donate() {
                   후원금 사용처
                 </h3>
                 <ul className="space-y-2 text-muted-foreground">
-                  <li>• 청소년 학습지원 프로그램 운영</li>
-                  <li>• 상담 및 복지 서비스 제공</li>
-                  <li>• 문화·체험 활동 지원</li>
-                  <li>• 교육 자료 및 시설 개선</li>
+                  {settings.donate_usage.split('\n').filter(Boolean).map((item) => (
+                    <li key={item}>• {item}</li>
+                  ))}
                 </ul>
               </div>
 
@@ -265,8 +259,8 @@ export default function Donate() {
                 <p className="text-muted-foreground mb-2">
                   후원 관련 문의사항이 있으시면 연락해 주세요.
                 </p>
-                <p className="font-semibold text-foreground">02-XXX-XXXX</p>
-                <p className="text-muted-foreground">contact@sj-hs.or.kr</p>
+                <p className="font-semibold text-foreground">{settings.donate_contact_phone}</p>
+                <p className="text-muted-foreground">{settings.donate_contact_email}</p>
               </div>
             </div>
           </div>
