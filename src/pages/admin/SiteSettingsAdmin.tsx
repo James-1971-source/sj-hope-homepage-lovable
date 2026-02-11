@@ -50,6 +50,9 @@ export default function SiteSettingsAdmin() {
     footer_sns_instagram: "",
     footer_sns_facebook: "",
     hero_overlay_color: "#1e3a5f",
+    contact_fax: "",
+    contact_map_embed: "",
+    contact_transport: "",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -389,7 +392,29 @@ export default function SiteSettingsAdmin() {
           </CardContent>
         </Card>
 
-        {/* 푸터 - SNS 링크 */}
+        {/* 문의 페이지 - 연락처 추가 정보 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>문의 페이지 설정</CardTitle>
+            <CardDescription>문의 페이지의 FAX 번호, 지도 임베드 URL, 교통안내 정보를 설정합니다. 주소, 전화, 이메일, 운영시간은 위 푸터 기관 정보와 공유됩니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="contact_fax">FAX 번호</Label>
+              <Input id="contact_fax" value={settings.contact_fax} onChange={(e) => update("contact_fax", e.target.value)} placeholder="053-XXX-XXXX" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contact_map_embed">지도 임베드 URL</Label>
+              <Input id="contact_map_embed" value={settings.contact_map_embed} onChange={(e) => update("contact_map_embed", e.target.value)} placeholder="https://map.naver.com/p/... 또는 카카오맵 임베드 URL" />
+              <p className="text-xs text-muted-foreground">네이버 지도 또는 카카오맵에서 '공유 → 임베드' URL을 복사하여 붙여넣으세요. 비워두면 기본 주소 기반 지도가 표시됩니다.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="contact_transport">교통안내 (줄바꿈: Enter 사용)</Label>
+              <Textarea id="contact_transport" value={settings.contact_transport} onChange={(e) => update("contact_transport", e.target.value)} rows={3} placeholder="대중교통: 지하철 O호선 OO역 O번 출구&#10;버스: OOO번 OO정류장 하차" />
+            </div>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader>
             <CardTitle>푸터 - SNS 링크</CardTitle>
