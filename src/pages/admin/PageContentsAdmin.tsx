@@ -262,6 +262,10 @@ export default function PageContentsAdmin() {
     return pageContents.find(c => c.section_key === sectionKey);
   };
 
+  const getContentByPage = (pageKey: string, sectionKey: string) => {
+    return pageContents.find(c => c.page_key === pageKey && c.section_key === sectionKey);
+  };
+
   if (loading) {
     return (
       <AdminLayout>
@@ -277,16 +281,18 @@ export default function PageContentsAdmin() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">페이지 콘텐츠 관리</h1>
-          <p className="text-muted-foreground mt-1">기관소개 페이지의 내용을 수정합니다.</p>
+          <p className="text-muted-foreground mt-1">기관소개 페이지 및 약관/방침 내용을 수정합니다.</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="greeting">인사말</TabsTrigger>
             <TabsTrigger value="mission">미션/비전</TabsTrigger>
             <TabsTrigger value="history">연혁</TabsTrigger>
             <TabsTrigger value="organization">조직도</TabsTrigger>
             <TabsTrigger value="facilities">시설안내</TabsTrigger>
+            <TabsTrigger value="privacy">개인정보</TabsTrigger>
+            <TabsTrigger value="terms">이용약관</TabsTrigger>
           </TabsList>
 
           {/* 인사말 탭 */}
@@ -655,6 +661,82 @@ export default function PageContentsAdmin() {
                 </Card>
               )}
             </div>
+          </TabsContent>
+
+          {/* 개인정보처리방침 탭 */}
+          <TabsContent value="privacy" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>개인정보처리방침</CardTitle>
+                <CardDescription>개인정보처리방침 내용을 수정합니다. 마크다운(## 제목, - 목록, **굵게**)을 지원합니다.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  const content = getContentByPage("privacy", "main");
+                  if (!content) return <p className="text-muted-foreground">데이터가 없습니다. 저장 후 새로고침해주세요.</p>;
+                  return (
+                    <>
+                      <div className="space-y-2">
+                        <Label>내용</Label>
+                        <Textarea
+                          value={content.content || ""}
+                          onChange={(e) => {
+                            const updated = pageContents.map(c =>
+                              c.page_key === "privacy" && c.section_key === "main" ? { ...c, content: e.target.value } : c
+                            );
+                            setPageContents(updated);
+                          }}
+                          rows={20}
+                          placeholder="개인정보처리방침 내용"
+                        />
+                      </div>
+                      <Button onClick={() => handleSaveContent(content)} disabled={saving}>
+                        <Save className="h-4 w-4 mr-2" />
+                        저장
+                      </Button>
+                    </>
+                  );
+                })()}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* 이용약관 탭 */}
+          <TabsContent value="terms" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>이용약관</CardTitle>
+                <CardDescription>이용약관 내용을 수정합니다. 마크다운(## 제목, - 목록, **굵게**)을 지원합니다.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  const content = getContentByPage("terms", "main");
+                  if (!content) return <p className="text-muted-foreground">데이터가 없습니다. 저장 후 새로고침해주세요.</p>;
+                  return (
+                    <>
+                      <div className="space-y-2">
+                        <Label>내용</Label>
+                        <Textarea
+                          value={content.content || ""}
+                          onChange={(e) => {
+                            const updated = pageContents.map(c =>
+                              c.page_key === "terms" && c.section_key === "main" ? { ...c, content: e.target.value } : c
+                            );
+                            setPageContents(updated);
+                          }}
+                          rows={20}
+                          placeholder="이용약관 내용"
+                        />
+                      </div>
+                      <Button onClick={() => handleSaveContent(content)} disabled={saving}>
+                        <Save className="h-4 w-4 mr-2" />
+                        저장
+                      </Button>
+                    </>
+                  );
+                })()}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
