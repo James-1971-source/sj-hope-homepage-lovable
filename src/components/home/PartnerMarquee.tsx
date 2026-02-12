@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Play, Pause } from "lucide-react";
 
 interface Partner {
   id: string;
@@ -11,9 +12,11 @@ interface Partner {
 export default function PartnerMarquee() {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [playing, setPlaying] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetch = async () => {
+    const load = async () => {
       const { data } = await supabase
         .from("partner_organizations")
         .select("id, name, logo_url, link_url")
@@ -22,7 +25,7 @@ export default function PartnerMarquee() {
       setPartners(data || []);
       setLoading(false);
     };
-    fetch();
+    load();
   }, []);
 
   if (loading || partners.length === 0) return null;
@@ -32,7 +35,7 @@ export default function PartnerMarquee() {
       <img
         src={partner.logo_url}
         alt={partner.name}
-        className="h-10 md:h-12 w-auto max-w-[160px] object-contain opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
+        className="h-8 md:h-10 w-auto max-w-[140px] object-contain"
       />
     );
 
@@ -41,33 +44,56 @@ export default function PartnerMarquee() {
         href={partner.link_url}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex-shrink-0 px-6 md:px-8 flex items-center"
+        className="flex-shrink-0 px-5 md:px-6 flex items-center"
         title={partner.name}
       >
         {img}
       </a>
     ) : (
-      <span className="flex-shrink-0 px-6 md:px-8 flex items-center" title={partner.name}>
+      <span className="flex-shrink-0 px-5 md:px-6 flex items-center" title={partner.name}>
         {img}
       </span>
     );
   };
 
   return (
-    <section className="py-8 md:py-10 bg-muted/50 border-t border-border/50 overflow-hidden">
-      <div className="container-wide mb-6">
-        <h3 className="text-lg md:text-xl font-bold text-foreground">함께하는 기관</h3>
-      </div>
-      <div className="relative">
-        {/* Fade edges */}
-        <div className="absolute left-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-r from-muted/50 to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-16 md:w-24 bg-gradient-to-l from-muted/50 to-transparent z-10 pointer-events-none" />
+    <section className="bg-white border-t border-b border-border/40">
+      <div className="flex items-center h-14 md:h-16">
+        {/* Left: title + controls */}
+        <div className="flex-shrink-0 flex items-center gap-2 pl-4 md:pl-8 pr-4 border-r border-border/40 h-full">
+          <span className="font-bold text-sm md:text-base text-foreground whitespace-nowrap">함께하는 기관</span>
+          <div className="flex items-center gap-0.5 ml-1">
+            <button
+              onClick={() => setPlaying(true)}
+              className={`p-1 rounded transition-colors ${playing ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              aria-label="재생"
+            >
+              <Play className="h-3.5 w-3.5" fill={playing ? "currentColor" : "none"} />
+            </button>
+            <button
+              onClick={() => setPlaying(false)}
+              className={`p-1 rounded transition-colors ${!playing ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+              aria-label="중단"
+            >
+              <Pause className="h-3.5 w-3.5" fill={!playing ? "currentColor" : "none"} />
+            </button>
+          </div>
+        </div>
 
-        <div className="flex animate-marquee">
-          {/* Duplicate list for seamless loop */}
-          {[...partners, ...partners].map((partner, idx) => (
-            <LogoItem key={`${partner.id}-${idx}`} partner={partner} />
-          ))}
+        {/* Right: scrolling logos */}
+        <div className="relative flex-1 overflow-hidden h-full">
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+          <div
+            ref={scrollRef}
+            className="flex items-center h-full"
+            style={{
+              animation: playing ? 'marquee 30s linear infinite' : 'none',
+            }}
+          >
+            {[...partners, ...partners].map((partner, idx) => (
+              <LogoItem key={`${partner.id}-${idx}`} partner={partner} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
