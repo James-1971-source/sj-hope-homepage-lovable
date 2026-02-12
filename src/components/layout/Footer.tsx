@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Heart, MapPin, Phone, Mail, Clock, Globe, Youtube, Instagram, Facebook } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import PartnerMarquee from "@/components/home/PartnerMarquee";
 
 const footerLinks = {
   기관: [
@@ -41,6 +42,9 @@ export default function Footer() {
 
   return (
     <footer className="bg-secondary text-secondary-foreground">
+      {/* Partner Marquee */}
+      <PartnerMarquee />
+
       {/* CTA Band */}
       <div className="bg-primary">
         <div className="container-wide py-10 md:py-14">
