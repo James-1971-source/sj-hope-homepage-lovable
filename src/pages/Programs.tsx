@@ -122,20 +122,6 @@ export default function Programs() {
         </div>
       </section>
 
-      {/* Contact CTA */}
-      <section className="cta-band">
-        <div className="container-wide text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">
-            프로그램에 대해 궁금하신 점이 있으신가요?
-          </h2>
-          <p className="text-primary-foreground/90 mb-8">
-            언제든지 문의해 주세요. 친절하게 안내해 드리겠습니다.
-          </p>
-          <Button variant="hero" size="lg" asChild className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-            <Link to="/contact">문의하기</Link>
-          </Button>
-        </div>
-      </section>
     </Layout>
   );
 }

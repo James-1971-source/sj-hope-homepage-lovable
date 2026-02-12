@@ -294,23 +294,6 @@ export default function About() {
         </section>
       )}
 
-      {/* CTA */}
-      <section className="cta-band">
-        <div className="container-wide text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">함께 희망을 나누어 주세요</h2>
-          <p className="text-primary-foreground/90 mb-8 max-w-xl mx-auto">
-            여러분의 관심과 후원이 청소년들에게 밝은 미래를 선물합니다.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="lg" asChild className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-              <Link to="/donate">후원하기</Link>
-            </Button>
-            <Button variant="heroOutline" size="lg" asChild>
-              <Link to="/volunteer">자원봉사 신청</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
     </Layout>
   );
 }
