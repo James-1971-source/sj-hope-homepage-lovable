@@ -313,6 +313,39 @@ export type Database = {
         }
         Relationships: []
       }
+      partner_organizations: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          link_url: string | null
+          logo_url: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          logo_url: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          link_url?: string | null
+          logo_url?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       posts: {
         Row: {
           category: string
