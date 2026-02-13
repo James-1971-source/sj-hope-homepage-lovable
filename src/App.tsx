@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Programs from "./pages/Programs";
 import ProgramDetail from "./pages/ProgramDetail";
 import News from "./pages/News";
+import NewsDetail from "./pages/NewsDetail";
 import Gallery from "./pages/Gallery";
 import Donate from "./pages/Donate";
 import Volunteer from "./pages/Volunteer";
@@ -48,7 +49,7 @@ const App = () => (
             <Route path="/programs" element={<Programs />} />
             <Route path="/programs/:id" element={<ProgramDetail />} />
             <Route path="/news" element={<News />} />
-            <Route path="/news/:id" element={<News />} />
+            <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/gallery/:id" element={<Gallery />} />
             <Route path="/donate" element={<Donate />} />
