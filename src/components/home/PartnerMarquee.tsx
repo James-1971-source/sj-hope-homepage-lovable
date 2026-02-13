@@ -85,8 +85,11 @@ export default function PartnerMarquee() {
           <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
           <div
             ref={scrollRef}
-            className={`flex items-center h-full w-max ${playing ? 'animate-marquee' : ''}`}
-            style={!playing ? { animationPlayState: 'paused' } : undefined}
+            className="flex items-center h-full w-max"
+            style={{
+              animation: 'marquee 30s linear infinite',
+              animationPlayState: playing ? 'running' : 'paused',
+            }}
           >
             {[...partners, ...partners].map((partner, idx) => (
               <LogoItem key={`${partner.id}-${idx}`} partner={partner} />
