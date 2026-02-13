@@ -142,7 +142,7 @@ export default function NewsDetail() {
           )}
 
           <div
-            className="prose prose-lg max-w-none text-foreground"
+            className="prose prose-lg max-w-none text-foreground whitespace-pre-wrap [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_a]:text-primary [&_a]:underline"
             dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
 
