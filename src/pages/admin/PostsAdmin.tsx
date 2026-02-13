@@ -3,7 +3,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -285,11 +285,9 @@ export default function PostsAdmin() {
               </div>
               <div className="space-y-2">
                 <Label>내용</Label>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="게시글 내용을 입력하세요"
-                  rows={10}
+                <RichTextEditor
+                  content={content}
+                  onChange={setContent}
                 />
               </div>
               <div className="space-y-2">
