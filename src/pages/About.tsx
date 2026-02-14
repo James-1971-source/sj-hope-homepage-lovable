@@ -276,10 +276,10 @@ export default function About() {
                     <h3 className="text-xl font-bold text-foreground mb-4">{facility.name}</h3>
                     {facility.description && <p className="text-muted-foreground mb-6">{facility.description}</p>}
                     {facility.images && facility.images.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {facility.images.map((img, idx) => (
-                          <div key={idx} className="aspect-video rounded-lg overflow-hidden">
-                            <img src={img} alt={`${facility.name} ${idx + 1}`} className="w-full h-full object-cover" />
+                          <div key={idx} className="rounded-lg overflow-hidden">
+                            <img src={img} alt={`${facility.name} ${idx + 1}`} className="w-full h-auto rounded-lg" />
                           </div>
                         ))}
                       </div>
