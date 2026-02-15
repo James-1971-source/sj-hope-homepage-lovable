@@ -447,6 +447,7 @@ export type Database = {
       }
       recruitment_posts: {
         Row: {
+          attachments: string[] | null
           content: string | null
           created_at: string
           display_order: number
@@ -460,6 +461,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attachments?: string[] | null
           content?: string | null
           created_at?: string
           display_order?: number
@@ -473,6 +475,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attachments?: string[] | null
           content?: string | null
           created_at?: string
           display_order?: number
