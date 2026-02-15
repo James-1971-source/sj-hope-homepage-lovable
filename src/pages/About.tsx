@@ -270,7 +270,7 @@ export default function About() {
               <h2 className="text-2xl md:text-3xl font-bold text-foreground">시설안내</h2>
             </div>
             {facilities.length > 0 ? (
-              <div className="space-y-12">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {facilities.map((facility) => (
                   <div key={facility.id} className="card-warm p-6">
                     <h3 className="text-xl font-bold text-foreground mb-4">{facility.name}</h3>
