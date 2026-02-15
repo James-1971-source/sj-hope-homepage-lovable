@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Calendar, ArrowLeft } from "lucide-react";
+import { ChevronRight, Calendar, ArrowLeft, FileDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,6 +13,7 @@ interface Post {
   title: string;
   content: string | null;
   cover_image: string | null;
+  attachments: string[];
   created_at: string;
   pinned: boolean;
 }
@@ -145,6 +146,30 @@ export default function NewsDetail() {
             className="prose prose-lg max-w-none text-foreground whitespace-pre-wrap [&_h1]:text-2xl [&_h2]:text-xl [&_h3]:text-lg [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_a]:text-primary [&_a]:underline"
             dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
+
+          {post.attachments && post.attachments.length > 0 && (
+            <div className="mt-8 p-6 bg-muted rounded-lg">
+              <h3 className="font-semibold text-foreground mb-3">📎 첨부파일</h3>
+              <ul className="space-y-2">
+                {post.attachments.map((url, index) => {
+                  const fileName = decodeURIComponent(url.split("/").pop() || `첨부파일 ${index + 1}`);
+                  return (
+                    <li key={index}>
+                      <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary hover:underline"
+                      >
+                        <FileDown className="h-4 w-4 flex-shrink-0" />
+                        <span className="text-sm">{fileName}</span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
 
           <div className="mt-12 pt-8 border-t border-border">
             <Button variant="outline" onClick={() => navigate("/news")}>
