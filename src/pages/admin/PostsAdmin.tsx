@@ -30,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import FileUpload from "@/components/admin/FileUpload";
 
 interface Post {
   id: string;
@@ -291,12 +292,20 @@ export default function PostsAdmin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>커버 이미지 URL</Label>
+                <Label>커버 이미지</Label>
+                <FileUpload
+                  onUpload={(url) => setCoverImage(url)}
+                  type="image"
+                />
+                <p className="text-xs text-muted-foreground">또는 직접 URL 입력:</p>
                 <Input
                   value={coverImage}
                   onChange={(e) => setCoverImage(e.target.value)}
-                  placeholder="https://..."
+                  placeholder="https://example.com/image.jpg"
                 />
+                {coverImage && (
+                  <img src={coverImage} alt="커버 미리보기" className="max-h-48 rounded-lg mt-2" />
+                )}
               </div>
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>
