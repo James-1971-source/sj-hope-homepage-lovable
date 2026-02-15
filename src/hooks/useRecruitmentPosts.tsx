@@ -11,6 +11,7 @@ export interface RecruitmentPost {
   is_active: boolean;
   is_featured: boolean;
   display_order: number;
+  attachments: string[];
   created_at: string;
   updated_at: string;
 }

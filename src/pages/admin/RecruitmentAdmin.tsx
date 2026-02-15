@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { useRecruitmentPosts, RecruitmentPost } from "@/hooks/useRecruitmentPosts";
 import FileUpload from "@/components/admin/FileUpload";
+import { MultiFileUpload } from "@/components/admin/FileUpload";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 
 const emptyForm = {
@@ -26,6 +27,7 @@ const emptyForm = {
   is_active: true,
   is_featured: false,
   display_order: 0,
+  attachments: [] as string[],
 };
 
 export default function RecruitmentAdmin() {
@@ -52,6 +54,7 @@ export default function RecruitmentAdmin() {
       is_active: post.is_active,
       is_featured: post.is_featured,
       display_order: post.display_order,
+      attachments: post.attachments || [],
     });
     setDialogOpen(true);
   };
@@ -71,6 +74,7 @@ export default function RecruitmentAdmin() {
       is_active: form.is_active,
       is_featured: form.is_featured,
       display_order: form.display_order,
+      attachments: form.attachments,
     };
 
     const { error } = editingId
@@ -216,6 +220,17 @@ export default function RecruitmentAdmin() {
                 <RichTextEditor
                   content={form.content}
                   onChange={(val) => setForm({ ...form, content: val })}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>첨부 문서 (PDF, DOC, XLS 등)</Label>
+                <MultiFileUpload
+                  urls={form.attachments}
+                  onUrlsChange={(urls) => setForm({ ...form, attachments: urls })}
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.hwp,.ppt,.pptx"
+                  maxSize={20}
+                  type="file"
                 />
               </div>
 

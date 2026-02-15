@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { ChevronRight, Calendar, Megaphone } from "lucide-react";
+import { ChevronRight, Calendar, Megaphone, FileDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRecruitmentPosts } from "@/hooks/useRecruitmentPosts";
@@ -79,6 +79,28 @@ export default function Recruitment() {
                         className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                       />
+                    )}
+                    {post.attachments && post.attachments.length > 0 && (
+                      <div className="mt-6 space-y-2">
+                        <h3 className="text-sm font-semibold text-foreground">📎 첨부 문서</h3>
+                        <div className="space-y-1.5">
+                          {post.attachments.map((url, idx) => {
+                            const fileName = decodeURIComponent(url.split("/").pop() || `문서 ${idx + 1}`);
+                            return (
+                              <a
+                                key={idx}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-2 text-sm text-primary hover:underline"
+                              >
+                                <FileDown className="h-4 w-4 shrink-0" />
+                                <span className="truncate">{fileName}</span>
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </article>
