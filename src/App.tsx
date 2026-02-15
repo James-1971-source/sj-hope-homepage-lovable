@@ -32,6 +32,8 @@ import NotFound from "./pages/NotFound";
 import HomepageProgramsAdmin from "./pages/admin/HomepageProgramsAdmin";
 import PartnersAdmin from "./pages/admin/PartnersAdmin";
 import PolicyPage from "./pages/PolicyPage";
+import Recruitment from "./pages/Recruitment";
+import RecruitmentAdmin from "./pages/admin/RecruitmentAdmin";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +57,7 @@ const App = () => (
             <Route path="/donate" element={<Donate />} />
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/recruitment" element={<Recruitment />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<PolicyPage />} />
             <Route path="/terms" element={<PolicyPage />} />
@@ -66,6 +69,7 @@ const App = () => (
             <Route path="/admin/homepage-programs" element={<HomepageProgramsAdmin />} />
             <Route path="/admin/partners" element={<PartnersAdmin />} />
             <Route path="/admin/posts" element={<PostsAdmin />} />
+            <Route path="/admin/recruitment" element={<RecruitmentAdmin />} />
             <Route path="/admin/programs" element={<ProgramsAdmin />} />
             <Route path="/admin/gallery" element={<GalleryAdmin />} />
             <Route path="/admin/videos" element={<VideosAdmin />} />
