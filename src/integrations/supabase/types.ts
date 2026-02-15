@@ -445,6 +445,48 @@ export type Database = {
         }
         Relationships: []
       }
+      recruitment_posts: {
+        Row: {
+          content: string | null
+          created_at: string
+          display_order: number
+          end_date: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          poster_image: string | null
+          start_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          poster_image?: string | null
+          start_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          display_order?: number
+          end_date?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          poster_image?: string | null
+          start_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       resources: {
         Row: {
           category: string

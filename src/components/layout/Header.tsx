@@ -61,6 +61,9 @@ const navigation = [{
   }, {
     name: "자원봉사",
     href: "/volunteer"
+  }, {
+    name: "재능기부활동가 모집",
+    href: "/recruitment"
   }]
 }, {
   name: "자료실",
