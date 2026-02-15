@@ -30,7 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
-import FileUpload from "@/components/admin/FileUpload";
+import FileUpload, { MultiFileUpload } from "@/components/admin/FileUpload";
 
 interface Post {
   id: string;
@@ -39,6 +39,7 @@ interface Post {
   content: string | null;
   cover_image: string | null;
   pinned: boolean;
+  attachments: string[];
   created_at: string;
 }
 
@@ -61,6 +62,7 @@ export default function PostsAdmin() {
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [pinned, setPinned] = useState(false);
+  const [attachments, setAttachments] = useState<string[]>([]);
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -89,6 +91,7 @@ export default function PostsAdmin() {
     setContent("");
     setCoverImage("");
     setPinned(false);
+    setAttachments([]);
     setEditingPost(null);
   };
 
@@ -104,6 +107,7 @@ export default function PostsAdmin() {
     setContent(post.content || "");
     setCoverImage(post.cover_image || "");
     setPinned(post.pinned);
+    setAttachments(post.attachments || []);
     setDialogOpen(true);
   };
 
@@ -121,6 +125,7 @@ export default function PostsAdmin() {
       content: content.trim() || null,
       cover_image: coverImage.trim() || null,
       pinned,
+      attachments,
     };
 
     if (editingPost) {
@@ -306,6 +311,16 @@ export default function PostsAdmin() {
                 {coverImage && (
                   <img src={coverImage} alt="커버 미리보기" className="max-h-48 rounded-lg mt-2" />
                 )}
+              </div>
+              <div className="space-y-2">
+                <Label>첨부파일 (PDF, DOC, 엑셀 등)</Label>
+                <MultiFileUpload
+                  urls={attachments}
+                  onUrlsChange={setAttachments}
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.hwp,.ppt,.pptx"
+                  maxSize={20}
+                  type="file"
+                />
               </div>
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>

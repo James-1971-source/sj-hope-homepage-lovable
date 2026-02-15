@@ -348,6 +348,7 @@ export type Database = {
       }
       posts: {
         Row: {
+          attachments: string[] | null
           category: string
           content: string | null
           cover_image: string | null
@@ -358,6 +359,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attachments?: string[] | null
           category?: string
           content?: string | null
           cover_image?: string | null
@@ -368,6 +370,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attachments?: string[] | null
           category?: string
           content?: string | null
           cover_image?: string | null
