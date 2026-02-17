@@ -120,6 +120,16 @@ export default function VideoSection() {
             );
           })}
         </div>
+
+        {/* 전체보기 버튼 */}
+        <div className="text-center mt-8">
+          <Link to="/videos">
+            <Button variant="outline" size="lg" className="gap-2">
+              전체 영상 보기
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   );
