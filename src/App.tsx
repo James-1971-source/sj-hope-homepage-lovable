@@ -34,6 +34,7 @@ import PartnersAdmin from "./pages/admin/PartnersAdmin";
 import PolicyPage from "./pages/PolicyPage";
 import Recruitment from "./pages/Recruitment";
 import RecruitmentAdmin from "./pages/admin/RecruitmentAdmin";
+import Videos from "./pages/Videos";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
             <Route path="/news" element={<News />} />
             <Route path="/news/:id" element={<NewsDetail />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/videos" element={<Videos />} />
             <Route path="/gallery/:id" element={<Gallery />} />
             <Route path="/donate" element={<Donate />} />
             <Route path="/volunteer" element={<Volunteer />} />
