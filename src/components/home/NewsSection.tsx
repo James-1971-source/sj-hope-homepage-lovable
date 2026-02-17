@@ -104,31 +104,36 @@ export default function NewsSection() {
           </Button>
         </div>
 
-        {/* News List */}
+        {/* News List - 2열 카드 레이아웃 */}
         {posts.length > 0 ? (
-          <div className="grid gap-4">
+          <div className="grid sm:grid-cols-2 gap-4">
             {posts.map((item) => (
               <Link
                 key={item.id}
                 to={`/news/${item.id}`}
-                className="group card-warm flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6"
+                className="group card-warm flex flex-col gap-3"
               >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex items-center gap-2">
                   <Badge className={categoryColors[item.category] || "bg-muted"}>
                     {item.category}
                   </Badge>
-                  <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate flex-1">
-                    {item.pinned && (
-                      <span className="text-primary mr-2">[중요]</span>
-                    )}
-                    {item.title}
-                  </h3>
+                  {item.pinned && (
+                    <Badge variant="outline" className="text-primary border-primary/40 text-xs">
+                      중요
+                    </Badge>
+                  )}
                 </div>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(item.created_at)}
-                  </div>
+                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                  {item.title}
+                </h3>
+                {getExcerpt(item.content) && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {getExcerpt(item.content)}
+                  </p>
+                )}
+                <div className="flex items-center gap-1 text-xs text-muted-foreground mt-auto pt-2 border-t border-border/50">
+                  <Calendar className="h-3.5 w-3.5" />
+                  {formatDate(item.created_at)}
                 </div>
               </Link>
             ))}

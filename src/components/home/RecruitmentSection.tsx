@@ -41,30 +41,24 @@ export default function RecruitmentSection() {
           </h2>
         </div>
 
-        {/* Cards */}
-        <div
-          className={`grid gap-8 ${
-            featuredPosts.length === 1
-              ? "max-w-2xl mx-auto"
-              : "md:grid-cols-2 max-w-5xl mx-auto"
-          }`}
-        >
+        {/* Cards - 가로 레이아웃, 이미지 크기 제한 */}
+        <div className="space-y-6 max-w-4xl mx-auto">
           {featuredPosts.map((post) => (
             <Link
               key={post.id}
               to="/recruitment"
-              className="group bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-border"
+              className="group bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-border flex flex-col sm:flex-row"
             >
               {post.poster_image && (
-                <div className="w-full">
+                <div className="sm:w-64 md:w-80 shrink-0">
                   <img
                     src={post.poster_image}
                     alt={post.title}
-                    className="w-full h-auto object-contain"
+                    className="w-full h-48 sm:h-full object-cover"
                   />
                 </div>
               )}
-              <div className="p-6">
+              <div className="p-6 flex flex-col justify-center flex-1 min-w-0">
                 <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors mb-2">
                   {post.title}
                 </h3>
@@ -77,8 +71,8 @@ export default function RecruitmentSection() {
                   </div>
                 )}
                 {post.content && (
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {post.content.replace(/<[^>]*>/g, "").slice(0, 100)}
+                  <p className="text-muted-foreground text-sm line-clamp-3">
+                    {post.content.replace(/<[^>]*>/g, "").slice(0, 150)}
                   </p>
                 )}
               </div>
