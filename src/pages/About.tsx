@@ -57,7 +57,7 @@ export default function About() {
 
   const getSectionTitle = () => {
     switch (activeSection) {
-      case "mission": return "미션과 비전";
+      case "mission": return "미션과 비전, 그리고 핵심가치";
       case "history": return "연혁";
       case "organization": return "조직도";
       case "facilities": return "시설안내";
@@ -128,23 +128,31 @@ export default function About() {
         <section className="section-padding bg-warm-cream">
           <div className="container-wide">
             <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground">미션과 비전</h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground">미션과 비전, 그리고 핵심가치</h2>
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {values.map((item) => (
-                <div key={item.title} className="card-warm text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                    <item.icon className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold text-foreground mb-4">{item.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                <div key={item.title} className="card-warm text-left">
                   {item.images && item.images.length > 0 && (
-                    <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="mb-6 grid grid-cols-1 gap-3">
                       {item.images.map((img, idx) => (
                         <img key={idx} src={img} alt={`${item.title} ${idx + 1}`} className="rounded-lg w-full h-auto object-cover" />
                       ))}
                     </div>
                   )}
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                      <item.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-xl font-bold text-foreground">{item.title}</h3>
+                  </div>
+                  <div className="text-muted-foreground leading-relaxed whitespace-pre-line"
+                    dangerouslySetInnerHTML={{
+                      __html: item.description
+                        .replace(/(전문성|투명성|국제성|평등성)/g, '<strong class="text-foreground">$1</strong>')
+                        .replace(/\.\s*(?=(전문성|투명성|국제성|평등성))/g, '.\n\n')
+                    }}
+                  />
                 </div>
               ))}
             </div>
