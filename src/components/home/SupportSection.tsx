@@ -68,25 +68,6 @@ export default function SupportSection() {
           ))}
         </div>
 
-        {/* Donation Info */}
-        <div className="mt-12 bg-warm-orange-light rounded-3xl p-8 md:p-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <h3 className="text-xl font-bold text-foreground mb-2">
-                후원금 계좌안내
-              </h3>
-              <p className="text-muted-foreground">
-                신한은행 XXX-XXX-XXXXXX (예금주: 사단법인 S&J희망나눔)
-              </p>
-            </div>
-            <Button size="lg" asChild>
-              <Link to="/donate">
-                <Heart className="h-5 w-5" />
-                후원하기
-              </Link>
-            </Button>
-          </div>
-        </div>
       </div>
     </section>
   );
