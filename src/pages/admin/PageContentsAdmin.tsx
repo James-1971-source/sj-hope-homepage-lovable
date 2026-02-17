@@ -484,7 +484,7 @@ export default function PageContentsAdmin() {
               const content = getContent(key);
               if (!content) return null;
               const labels: Record<string, string> = {
-                mission: "사명",
+                mission: "미션",
                 vision: "비전",
                 values: "핵심가치",
               };
@@ -518,6 +518,21 @@ export default function PageContentsAdmin() {
                         }}
                         rows={4}
                       />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>이미지</Label>
+                      <MultiFileUpload
+                        urls={content.images || []}
+                        onUrlsChange={(newUrls) => {
+                          const updated = pageContents.map(c =>
+                            c.section_key === key ? { ...c, images: newUrls } : c
+                          );
+                          setPageContents(updated);
+                        }}
+                        accept="image/*"
+                        type="image"
+                      />
+                      <p className="text-xs text-muted-foreground">{labels[key]} 항목에 표시될 이미지를 업로드하세요.</p>
                     </div>
                     <Button onClick={() => handleSaveContent(content)} disabled={saving}>
                       <Save className="h-4 w-4 mr-2" />

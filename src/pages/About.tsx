@@ -28,9 +28,9 @@ export default function About() {
   const valuesContent = getContent("values");
 
   const values = [
-    { icon: Target, title: missionContent?.title || "사명", description: missionContent?.content || "" },
-    { icon: Eye, title: visionContent?.title || "비전", description: visionContent?.content || "" },
-    { icon: Users, title: valuesContent?.title || "핵심가치", description: valuesContent?.content || "" },
+    { icon: Target, title: missionContent?.title || "미션", description: missionContent?.content || "", images: missionContent?.images || [] },
+    { icon: Eye, title: visionContent?.title || "비전", description: visionContent?.content || "", images: visionContent?.images || [] },
+    { icon: Users, title: valuesContent?.title || "핵심가치", description: valuesContent?.content || "", images: valuesContent?.images || [] },
   ];
 
   // 연혁: 연도별 그룹핑
@@ -138,6 +138,13 @@ export default function About() {
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-4">{item.title}</h3>
                   <p className="text-muted-foreground leading-relaxed">{item.description}</p>
+                  {item.images && item.images.length > 0 && (
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      {item.images.map((img, idx) => (
+                        <img key={idx} src={img} alt={`${item.title} ${idx + 1}`} className="rounded-lg w-full h-auto object-cover" />
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
