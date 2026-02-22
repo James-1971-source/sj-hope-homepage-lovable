@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import BannerSlider from "@/components/home/BannerSlider";
 import HeroSection from "@/components/home/HeroSection";
+import PromoVideoSection from "@/components/home/PromoVideoSection";
 import ProgramsSection from "@/components/home/ProgramsSection";
 import NewsSection from "@/components/home/NewsSection";
 import RecruitmentSection from "@/components/home/RecruitmentSection";
@@ -13,6 +14,7 @@ export default function Index() {
     <Layout>
       <BannerSlider />
       <HeroSection />
+      <PromoVideoSection />
       <ProgramsSection />
       <NewsSection />
       <RecruitmentSection />
