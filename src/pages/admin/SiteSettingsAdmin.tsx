@@ -61,6 +61,9 @@ export default function SiteSettingsAdmin() {
     donate_contact_phone: "02-XXX-XXXX",
     donate_contact_email: "contact@sj-hs.or.kr",
     organization_image_url: null,
+    promo_video_url: "",
+    promo_video_title: "기관 홍보영상",
+    promo_video_subtitle: "S&J희망나눔의 활동과 비전을 영상으로 만나보세요.",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -300,6 +303,42 @@ export default function SiteSettingsAdmin() {
                   </div>
                 ))}
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 메인 페이지 - 홍보영상 섹션 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>메인 페이지 - 홍보영상</CardTitle>
+            <CardDescription>히어로 섹션 바로 아래에 표시되는 홍보영상입니다. YouTube URL을 입력하면 자동으로 노출됩니다.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="promo_video_url">YouTube URL</Label>
+              <Input
+                id="promo_video_url"
+                value={settings.promo_video_url}
+                onChange={(e) => update("promo_video_url", e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+              />
+              <p className="text-xs text-muted-foreground">URL을 비워두면 홍보영상 섹션이 표시되지 않습니다.</p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="promo_video_title">제목</Label>
+              <Input
+                id="promo_video_title"
+                value={settings.promo_video_title}
+                onChange={(e) => update("promo_video_title", e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="promo_video_subtitle">부제목</Label>
+              <Input
+                id="promo_video_subtitle"
+                value={settings.promo_video_subtitle}
+                onChange={(e) => update("promo_video_subtitle", e.target.value)}
+              />
             </div>
           </CardContent>
         </Card>

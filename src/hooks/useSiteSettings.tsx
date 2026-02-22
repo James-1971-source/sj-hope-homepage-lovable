@@ -51,6 +51,9 @@ export interface SiteSettings {
   donate_contact_phone: string;
   donate_contact_email: string;
   organization_image_url: string | null;
+  promo_video_url: string;
+  promo_video_title: string;
+  promo_video_subtitle: string;
 }
 
 const defaultSettings: SiteSettings = {
@@ -102,6 +105,9 @@ const defaultSettings: SiteSettings = {
   donate_contact_phone: "02-XXX-XXXX",
   donate_contact_email: "contact@sj-hs.or.kr",
   organization_image_url: null,
+  promo_video_url: "",
+  promo_video_title: "기관 홍보영상",
+  promo_video_subtitle: "S&J희망나눔의 활동과 비전을 영상으로 만나보세요.",
 };
 
 export function useSiteSettings() {
