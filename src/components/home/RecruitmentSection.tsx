@@ -72,7 +72,11 @@ export default function RecruitmentSection() {
                 )}
                 {post.content && (
                   <p className="text-muted-foreground text-sm line-clamp-3">
-                    {post.content.replace(/<[^>]*>/g, "").slice(0, 150)}
+                    {(() => {
+                      const txt = post.content.replace(/<[^>]*>/g, "");
+                      const decoded = new DOMParser().parseFromString(txt, "text/html").documentElement.textContent || "";
+                      return decoded.slice(0, 150);
+                    })()}
                   </p>
                 )}
               </div>
