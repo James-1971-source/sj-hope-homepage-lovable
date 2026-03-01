@@ -3,7 +3,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 import {
   Dialog,
   DialogContent,
@@ -336,11 +336,9 @@ export default function ProgramsAdmin() {
               </div>
               <div className="space-y-2">
                 <Label>상세 내용</Label>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  placeholder="사업 상세 내용"
-                  rows={8}
+                <RichTextEditor
+                  content={content}
+                  onChange={setContent}
                 />
               </div>
               <div className="space-y-2">
