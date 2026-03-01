@@ -101,7 +101,7 @@ export default function About() {
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">인사말</h2>
               {greetingContent?.content?.startsWith('<') ? (
                 <div 
-                  className="prose prose-lg max-w-none text-muted-foreground"
+                  className="rich-content prose prose-lg max-w-none text-muted-foreground"
                   dangerouslySetInnerHTML={{ __html: greetingContent.content }}
                 />
               ) : (
