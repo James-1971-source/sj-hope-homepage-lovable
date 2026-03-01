@@ -185,10 +185,31 @@ export default function StorageAdmin() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    stats.files.map((file) => (
+                    stats.files.map((file) => {
+                      const isImage = file.content_type.startsWith("image/");
+                      const publicUrl = isImage
+                        ? `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/media/${file.name}`
+                        : null;
+                      return (
                       <TableRow key={file.name}>
-                        <TableCell className="font-mono text-sm truncate max-w-[200px]">
-                          {file.name}
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            {publicUrl ? (
+                              <img
+                                src={publicUrl}
+                                alt={file.name}
+                                className="h-10 w-10 rounded object-cover border flex-shrink-0"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="h-10 w-10 rounded border bg-muted flex items-center justify-center flex-shrink-0">
+                                <FileText className="h-4 w-4 text-muted-foreground" />
+                              </div>
+                            )}
+                            <span className="font-mono text-sm truncate max-w-[200px]">
+                              {file.name}
+                            </span>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <Badge variant="outline" className="text-xs">
@@ -213,7 +234,8 @@ export default function StorageAdmin() {
                           </Button>
                         </TableCell>
                       </TableRow>
-                    ))
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>
