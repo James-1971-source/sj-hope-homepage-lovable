@@ -60,7 +60,8 @@ export default function NewsSection() {
   const getExcerpt = (content: string | null) => {
     if (!content) return "";
     const plainText = content.replace(/<[^>]*>/g, "");
-    return plainText.length > 80 ? plainText.substring(0, 80) + "..." : plainText;
+    const decoded = new DOMParser().parseFromString(plainText, "text/html").documentElement.textContent || "";
+    return decoded.length > 80 ? decoded.substring(0, 80) + "..." : decoded;
   };
 
   if (loading) {
