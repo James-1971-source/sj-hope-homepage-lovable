@@ -35,6 +35,7 @@ import PolicyPage from "./pages/PolicyPage";
 import Recruitment from "./pages/Recruitment";
 import RecruitmentAdmin from "./pages/admin/RecruitmentAdmin";
 import Videos from "./pages/Videos";
+import StorageAdmin from "./pages/admin/StorageAdmin";
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,7 @@ const App = () => (
             <Route path="/admin/donations" element={<DonationsAdmin />} />
             <Route path="/admin/volunteers" element={<VolunteersAdmin />} />
             <Route path="/admin/messages" element={<MessagesAdmin />} />
+            <Route path="/admin/storage" element={<StorageAdmin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
