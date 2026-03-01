@@ -20,6 +20,7 @@ import {
   Layers,
   Handshake,
   Megaphone,
+  HardDrive,
 } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
@@ -40,6 +41,7 @@ const navItems = [
   { path: "/admin/donations", label: "후원문의", icon: Heart },
   { path: "/admin/volunteers", label: "봉사신청", icon: Users },
   { path: "/admin/messages", label: "문의", icon: MessageSquare },
+  { path: "/admin/storage", label: "스토리지", icon: HardDrive },
 ];
 
 interface AdminLayoutProps {

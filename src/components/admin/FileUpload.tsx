@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload, X, Loader2, FileIcon, ImageIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { compressImage } from "@/lib/imageCompression";
 
 interface FileUploadProps {
   onUpload: (url: string) => void;
@@ -34,13 +35,24 @@ export default function FileUpload({
     setUploading(true);
 
     try {
-      const fileExt = file.name.split(".").pop();
+      // Auto-compress images before upload
+      let processedFile = file;
+      if (type === "image" && file.type.startsWith("image/")) {
+        const originalSize = file.size;
+        processedFile = await compressImage(file);
+        if (processedFile.size < originalSize) {
+          const saved = ((1 - processedFile.size / originalSize) * 100).toFixed(0);
+          toast.info(`이미지 자동 압축: ${saved}% 용량 절감`);
+        }
+      }
+
+      const fileExt = processedFile.name.split(".").pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
       const filePath = `${type === "image" ? "images" : "files"}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("media")
-        .upload(filePath, file);
+        .upload(filePath, processedFile);
 
       if (uploadError) {
         throw uploadError;
