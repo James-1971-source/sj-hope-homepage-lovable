@@ -464,7 +464,7 @@ export default function PageContentsAdmin() {
                       {content.content && content.content.startsWith('<') && (
                         <div className="space-y-2">
                           <Label>미리보기</Label>
-                          <div className="p-4 border rounded-lg prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content.content }} />
+                          <div className="p-4 border rounded-lg rich-content prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content.content }} />
                         </div>
                       )}
                       <Button onClick={() => handleSaveContent(content)} disabled={saving}>

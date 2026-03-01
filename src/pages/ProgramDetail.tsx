@@ -110,9 +110,10 @@ export default function ProgramDetail() {
 
           {/* Body Content */}
           {program.content && (
-            <div className="prose prose-lg max-w-none text-foreground whitespace-pre-wrap">
-              {program.content}
-            </div>
+            <div
+              className="rich-content prose prose-lg max-w-none text-foreground"
+              dangerouslySetInnerHTML={{ __html: program.content }}
+            />
           )}
 
           {/* Additional Images */}

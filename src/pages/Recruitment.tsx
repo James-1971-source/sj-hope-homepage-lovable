@@ -76,7 +76,7 @@ export default function Recruitment() {
                     </h2>
                     {post.content && (
                       <div
-                        className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap"
+                        className="rich-content prose prose-sm max-w-none text-muted-foreground"
                         dangerouslySetInnerHTML={{ __html: post.content }}
                       />
                     )}
