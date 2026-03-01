@@ -9,6 +9,10 @@ import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 import Link from "@tiptap/extension-link";
 import FontFamily from "@tiptap/extension-font-family";
+import { Table } from "@tiptap/extension-table";
+import { TableRow } from "@tiptap/extension-table-row";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
 import { useEffect, useState, useCallback } from "react";
 import {
   Bold,
@@ -33,6 +37,12 @@ import {
   Link as LinkIcon,
   Unlink,
   Type,
+  Table as TableIcon,
+  Plus,
+  Minus,
+  Trash2,
+  Merge,
+  SplitSquareHorizontal,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -170,6 +180,10 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         openOnClick: false,
         HTMLAttributes: { class: "text-primary underline cursor-pointer" },
       }),
+      Table.configure({ resizable: true }),
+      TableRow,
+      TableCell,
+      TableHeader,
     ],
     content,
     onUpdate: ({ editor }) => {
@@ -512,12 +526,47 @@ export default function RichTextEditor({ content, onChange }: RichTextEditorProp
         >
           <YoutubeIcon className="h-4 w-4" />
         </ToolbarButton>
+
+        <Separator orientation="vertical" className="h-6 mx-1" />
+
+        {/* Table */}
+        <ToolbarButton
+          onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+          title="표 삽입 (3×3)"
+        >
+          <TableIcon className="h-4 w-4" />
+        </ToolbarButton>
+        {editor.isActive("table") && (
+          <>
+            <ToolbarButton onClick={() => editor.chain().focus().addColumnAfter().run()} title="열 추가">
+              <Plus className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().deleteColumn().run()} title="열 삭제">
+              <Minus className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().addRowAfter().run()} title="행 추가">
+              <Plus className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().deleteRow().run()} title="행 삭제">
+              <Minus className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().mergeCells().run()} title="셀 병합">
+              <Merge className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().splitCell().run()} title="셀 분할">
+              <SplitSquareHorizontal className="h-4 w-4" />
+            </ToolbarButton>
+            <ToolbarButton onClick={() => editor.chain().focus().deleteTable().run()} title="표 삭제">
+              <Trash2 className="h-4 w-4" />
+            </ToolbarButton>
+          </>
+        )}
       </div>
 
       {/* Editor */}
       <EditorContent
         editor={editor}
-        className="min-h-[300px] p-4 prose prose-sm max-w-none focus-within:outline-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[280px] [&_.ProseMirror_p]:my-1 [&_.ProseMirror_p.is-empty]:min-h-[1em] [&_.ProseMirror_iframe]:rounded-lg [&_.ProseMirror_iframe]:my-4 [&_.ProseMirror_img]:rounded-lg [&_.ProseMirror_img]:my-4 [&_.ProseMirror_img]:max-w-full"
+        className="min-h-[300px] p-4 prose prose-sm max-w-none focus-within:outline-none [&_.ProseMirror]:outline-none [&_.ProseMirror]:min-h-[280px] [&_.ProseMirror_p]:my-1 [&_.ProseMirror_p.is-empty]:min-h-[1em] [&_.ProseMirror_iframe]:rounded-lg [&_.ProseMirror_iframe]:my-4 [&_.ProseMirror_img]:rounded-lg [&_.ProseMirror_img]:my-4 [&_.ProseMirror_img]:max-w-full [&_.ProseMirror_table]:border-collapse [&_.ProseMirror_table]:w-full [&_.ProseMirror_table]:my-4 [&_.ProseMirror_td]:border [&_.ProseMirror_td]:border-border [&_.ProseMirror_td]:p-2 [&_.ProseMirror_td]:min-w-[80px] [&_.ProseMirror_th]:border [&_.ProseMirror_th]:border-border [&_.ProseMirror_th]:p-2 [&_.ProseMirror_th]:bg-muted [&_.ProseMirror_th]:font-semibold [&_.ProseMirror_th]:min-w-[80px] [&_.ProseMirror_.selectedCell]:bg-primary/10"
       />
 
       {/* Image Dialog */}
