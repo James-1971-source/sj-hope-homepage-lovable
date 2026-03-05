@@ -1,9 +1,24 @@
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Layout from "@/components/layout/Layout";
 import { Newspaper } from "lucide-react";
 
 export default function YouthNews() {
+  const [today, setToday] = useState(() => new Date());
+
+  useEffect(() => {
+    const now = new Date();
+    const msUntilMidnight =
+      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+    const timeout = setTimeout(() => {
+      setToday(new Date());
+    }, msUntilMidnight + 100);
+    return () => clearTimeout(timeout);
+  }, [today]);
+
+  const dateLabel = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+
   const { data: items = [], isLoading } = useQuery({
     queryKey: ["youth-news"],
     queryFn: async () => {
@@ -26,7 +41,7 @@ export default function YouthNews() {
               청소년 늬우스
             </h1>
             <p className="text-muted-foreground">
-              매월 업데이트되는 청소년 뉴스를 확인하세요
+              매일 업데이트되는 청소년 뉴스를 확인하세요
             </p>
           </div>
 
@@ -43,7 +58,10 @@ export default function YouthNews() {
             (() => {
               const latest = items[0];
               return (
-                <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                  <h2 className="text-xl md:text-2xl font-bold text-primary mb-5">
+                    [ {dateLabel} 청소년 늬우스 ]
+                  </h2>
                   <a
                     href={latest.link_url}
                     target="_blank"
