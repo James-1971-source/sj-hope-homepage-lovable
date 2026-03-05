@@ -36,6 +36,8 @@ import Recruitment from "./pages/Recruitment";
 import RecruitmentAdmin from "./pages/admin/RecruitmentAdmin";
 import Videos from "./pages/Videos";
 import StorageAdmin from "./pages/admin/StorageAdmin";
+import YouthNews from "./pages/YouthNews";
+import YouthNewsAdmin from "./pages/admin/YouthNewsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -61,6 +63,7 @@ const App = () => (
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/recruitment" element={<Recruitment />} />
+            <Route path="/youth-news" element={<YouthNews />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/privacy" element={<PolicyPage />} />
             <Route path="/terms" element={<PolicyPage />} />
@@ -81,6 +84,7 @@ const App = () => (
             <Route path="/admin/volunteers" element={<VolunteersAdmin />} />
             <Route path="/admin/messages" element={<MessagesAdmin />} />
             <Route path="/admin/storage" element={<StorageAdmin />} />
+            <Route path="/admin/youth-news" element={<YouthNewsAdmin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
