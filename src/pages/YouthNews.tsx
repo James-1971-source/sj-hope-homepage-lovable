@@ -40,30 +40,35 @@ export default function YouthNews() {
               <p>등록된 청소년 늬우스가 없습니다.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {items.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.link_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block rounded-xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="aspect-square overflow-hidden">
-                    <img
-                      src={item.image_url}
-                      alt={item.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
-                      {item.title}
-                    </h3>
-                  </div>
-                </a>
-              ))}
-            </div>
+            (() => {
+              const latest = items[0];
+              return (
+                <div className="flex justify-center">
+                  <a
+                    href={latest.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block rounded-xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 max-w-md w-full"
+                  >
+                    <div className="aspect-square overflow-hidden">
+                      <img
+                        src={latest.image_url}
+                        alt={latest.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-5 text-center">
+                      <h3 className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                        {latest.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-2">
+                        클릭하면 오늘의 최신 청소년 뉴스를 볼 수 있습니다
+                      </p>
+                    </div>
+                  </a>
+                </div>
+              );
+            })()
           )}
         </div>
       </div>
