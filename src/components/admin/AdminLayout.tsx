@@ -21,6 +21,7 @@ import {
   Handshake,
   Megaphone,
   HardDrive,
+  Newspaper,
 } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ const navItems = [
   { path: "/admin/homepage-programs", label: "메인 사업소개", icon: Layers },
   { path: "/admin/partners", label: "함께하는 기관", icon: Handshake },
   { path: "/admin/posts", label: "공지/소식", icon: FileText },
+  { path: "/admin/youth-news", label: "청소년 늬우스", icon: Newspaper },
   { path: "/admin/recruitment", label: "모집공고", icon: Megaphone },
   { path: "/admin/programs", label: "사업소개", icon: BookOpen },
   { path: "/admin/gallery", label: "갤러리", icon: Images },

@@ -48,6 +48,9 @@ const navigation = [{
   }, {
     name: "행사안내",
     href: "/news?category=event"
+  }, {
+    name: "청소년 늬우스",
+    href: "/youth-news"
   }]
 }, {
   name: "갤러리",
