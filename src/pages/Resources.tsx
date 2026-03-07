@@ -3,9 +3,17 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2 } from "lucide-react";
+import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2, ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Resource {
   id: string;
@@ -34,11 +42,14 @@ const categories = [
   { id: "함께하는 기업 및 기관", name: "함께하는 기업 및 기관" },
 ];
 
+const ITEMS_PER_PAGE = 15;
+
 export default function Resources() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -65,6 +76,17 @@ export default function Resources() {
       searchQuery === "" ||
       item.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+  const totalPages = Math.ceil(filteredResources.length / ITEMS_PER_PAGE);
+  const paginatedResources = filteredResources.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset page when filter/search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [categoryFilter, searchQuery]);
 
   const handleDownload = (resource: Resource) => {
     window.open(resource.file_url, "_blank");
@@ -123,7 +145,7 @@ export default function Resources() {
         </div>
       </section>
 
-      {/* Resources List */}
+      {/* Resources Table */}
       <section className="section-padding">
         <div className="container-wide">
           {loading ? (
@@ -131,41 +153,127 @@ export default function Resources() {
               <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : filteredResources.length > 0 ? (
-            <div className="space-y-4">
-              {filteredResources.map((resource) => (
-                <div key={resource.id} className="card-warm flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                      <FileText className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Badge variant="outline">{resource.category}</Badge>
-                        <Badge variant="secondary">{getFileType(resource.file_url)}</Badge>
-                      </div>
-                      <h3 className="font-semibold text-foreground truncate">{resource.title}</h3>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 sm:gap-6">
-                    <div className="text-sm text-muted-foreground hidden sm:block">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(resource.created_at).toLocaleDateString("ko-KR")}
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownload(resource)}
-                      className="gap-2"
-                    >
-                      <Download className="h-4 w-4" />
-                      다운로드
-                    </Button>
-                  </div>
+            <>
+              {/* Result count */}
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-muted-foreground">
+                  총 <span className="font-semibold text-foreground">{filteredResources.length}</span>건
+                  {totalPages > 1 && ` (${currentPage}/${totalPages} 페이지)`}
+                </p>
+              </div>
+
+              {/* Compact Table */}
+              <div className="bg-background rounded-lg border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="w-16 text-center">번호</TableHead>
+                      <TableHead className="w-28">분류</TableHead>
+                      <TableHead>제목</TableHead>
+                      <TableHead className="w-20 text-center hidden sm:table-cell">형식</TableHead>
+                      <TableHead className="w-28 text-center hidden md:table-cell">등록일</TableHead>
+                      <TableHead className="w-24 text-center">다운로드</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {paginatedResources.map((resource, index) => (
+                      <TableRow
+                        key={resource.id}
+                        className="hover:bg-muted/30 cursor-pointer"
+                        onClick={() => handleDownload(resource)}
+                      >
+                        <TableCell className="text-center text-sm text-muted-foreground">
+                          {filteredResources.length - ((currentPage - 1) * ITEMS_PER_PAGE + index)}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline" className="text-xs whitespace-nowrap">
+                            {resource.category}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2 min-w-0">
+                            <FileText className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="font-medium text-foreground truncate">
+                              {resource.title}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center hidden sm:table-cell">
+                          <Badge variant="secondary" className="text-xs">
+                            {getFileType(resource.file_url)}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center text-sm text-muted-foreground hidden md:table-cell">
+                          {new Date(resource.created_at).toLocaleDateString("ko-KR")}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDownload(resource);
+                            }}
+                            className="gap-1 text-primary hover:text-primary/80"
+                          >
+                            <Download className="h-4 w-4" />
+                            <span className="hidden sm:inline">받기</span>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-1 mt-6">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((page) => {
+                      if (totalPages <= 7) return true;
+                      if (page === 1 || page === totalPages) return true;
+                      if (Math.abs(page - currentPage) <= 2) return true;
+                      return false;
+                    })
+                    .map((page, idx, arr) => {
+                      const prev = arr[idx - 1];
+                      const showEllipsis = prev && page - prev > 1;
+                      return (
+                        <span key={page} className="flex items-center">
+                          {showEllipsis && (
+                            <span className="px-2 text-muted-foreground">…</span>
+                          )}
+                          <Button
+                            variant={currentPage === page ? "default" : "outline"}
+                            size="sm"
+                            className="w-9"
+                            onClick={() => setCurrentPage(page)}
+                          >
+                            {page}
+                          </Button>
+                        </span>
+                      );
+                    })}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
-              ))}
-            </div>
+              )}
+            </>
           ) : (
             <div className="text-center py-16">
               <FileDown className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
