@@ -7,6 +7,9 @@ import { Input } from "@/components/ui/input";
 import { ChevronRight, Calendar, Search, ChevronLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from "@/components/ui/table";
 
 interface Post {
   id: string;
@@ -30,6 +33,8 @@ const categoryColors: Record<string, string> = {
   행사안내: "bg-success text-success-foreground",
 };
 
+const ITEMS_PER_PAGE = 15;
+
 export default function News() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,7 +42,6 @@ export default function News() {
   const [loading, setLoading] = useState(true);
   const categoryFilter = searchParams.get("category") || "all";
   const currentPage = parseInt(searchParams.get("page") || "1");
-  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -48,7 +52,6 @@ export default function News() {
           .select("*")
           .order("pinned", { ascending: false })
           .order("created_at", { ascending: false });
-
         if (error) throw error;
         setPosts(data || []);
       } catch (error) {
@@ -57,23 +60,13 @@ export default function News() {
         setLoading(false);
       }
     };
-
     fetchPosts();
   }, []);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("ko-KR", {
+      year: "numeric", month: "2-digit", day: "2-digit",
     });
-  };
-
-  const getExcerpt = (content: string | null) => {
-    if (!content) return "";
-    const plainText = content.replace(/<[^>]*>/g, "");
-    return plainText.length > 100 ? plainText.substring(0, 100) + "..." : plainText;
-  };
 
   const filteredNews = posts
     .filter((item) => categoryFilter === "all" || item.category === categoryFilter)
@@ -83,10 +76,10 @@ export default function News() {
       (item.content && item.content.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
-  const totalPages = Math.ceil(filteredNews.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredNews.length / ITEMS_PER_PAGE);
   const paginatedNews = filteredNews.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
   );
 
   const handleCategoryChange = (category: string) => {
@@ -100,6 +93,29 @@ export default function News() {
     params.set("page", page.toString());
     setSearchParams(params);
   };
+
+  const getPageNumbers = () => {
+    const pages: (number | "...")[] = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (currentPage > 3) pages.push("...");
+      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+        pages.push(i);
+      }
+      if (currentPage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
+    }
+    return pages;
+  };
+
+  // Reset to page 1 when filter/search changes
+  useEffect(() => {
+    if (currentPage > 1 && currentPage > totalPages) {
+      handlePageChange(1);
+    }
+  }, [filteredNews.length]);
 
   return (
     <Layout>
@@ -149,52 +165,70 @@ export default function News() {
         </div>
       </section>
 
-      {/* News List */}
+      {/* News Table */}
       <section className="section-padding">
         <div className="container-wide">
+          <div className="text-sm text-muted-foreground mb-4">
+            총 <span className="font-semibold text-foreground">{filteredNews.length}</span>건
+          </div>
+
           {loading ? (
-            <div className="space-y-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Skeleton key={i} className="h-24 w-full" />
+            <div className="space-y-2">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-full" />
               ))}
             </div>
           ) : paginatedNews.length > 0 ? (
-            <div className="space-y-4">
-              {paginatedNews.map((item) => (
-                <Link
-                  key={item.id}
-                  to={`/news/${item.id}`}
-                  className="card-warm block group"
-                >
-                  <div className="flex flex-col md:flex-row md:items-center gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Badge className={categoryColors[item.category] || "bg-muted"}>
-                          {item.category}
-                        </Badge>
-                        {item.pinned && (
-                          <Badge variant="outline" className="text-primary border-primary">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16 text-center">번호</TableHead>
+                  <TableHead className="w-24 text-center">분류</TableHead>
+                  <TableHead>제목</TableHead>
+                  <TableHead className="w-28 text-center">등록일</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {paginatedNews.map((item, index) => {
+                  const rowNum = filteredNews.length - ((currentPage - 1) * ITEMS_PER_PAGE + index);
+                  return (
+                    <TableRow
+                      key={item.id}
+                      className="cursor-pointer hover:bg-muted/50 h-10"
+                      onClick={() => window.location.href = `/news/${item.id}`}
+                    >
+                      <TableCell className="text-center text-muted-foreground py-2 text-sm">
+                        {item.pinned ? (
+                          <Badge variant="outline" className="text-primary border-primary text-xs px-1.5 py-0">
                             중요
                           </Badge>
-                        )}
-                      </div>
-                      <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors mb-2">
-                        {item.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm line-clamp-2">
-                        {getExcerpt(item.content)}
-                      </p>
-                    </div>
-                    <div className="flex md:flex-col items-center md:items-end gap-4 md:gap-2 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {formatDate(item.created_at)}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+                        ) : rowNum}
+                      </TableCell>
+                      <TableCell className="text-center py-2">
+                        <Badge className={`${categoryColors[item.category] || "bg-muted"} text-xs px-2 py-0`}>
+                          {item.category}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <Link
+                          to={`/news/${item.id}`}
+                          className="text-sm font-medium text-foreground hover:text-primary transition-colors line-clamp-1"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {item.title}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="text-center text-muted-foreground py-2 text-xs">
+                        <div className="flex items-center justify-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(item.created_at)}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           ) : (
             <div className="text-center py-16">
               <p className="text-muted-foreground">
@@ -207,28 +241,35 @@ export default function News() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-center gap-2 mt-12">
+            <div className="flex items-center justify-center gap-1 mt-8">
               <Button
                 variant="outline"
                 size="icon"
+                className="h-8 w-8"
                 disabled={currentPage === 1}
                 onClick={() => handlePageChange(currentPage - 1)}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "outline"}
-                  size="icon"
-                  onClick={() => handlePageChange(page)}
-                >
-                  {page}
-                </Button>
-              ))}
+              {getPageNumbers().map((page, idx) =>
+                page === "..." ? (
+                  <span key={`ellipsis-${idx}`} className="px-2 text-muted-foreground text-sm">...</span>
+                ) : (
+                  <Button
+                    key={page}
+                    variant={currentPage === page ? "default" : "outline"}
+                    size="icon"
+                    className="h-8 w-8 text-sm"
+                    onClick={() => handlePageChange(page as number)}
+                  >
+                    {page}
+                  </Button>
+                )
+              )}
               <Button
                 variant="outline"
                 size="icon"
+                className="h-8 w-8"
                 disabled={currentPage === totalPages}
                 onClick={() => handlePageChange(currentPage + 1)}
               >
