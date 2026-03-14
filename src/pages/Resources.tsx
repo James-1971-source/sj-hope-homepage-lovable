@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,7 @@ const categories = [
 const ITEMS_PER_PAGE = 15;
 
 export default function Resources() {
+  const navigate = useNavigate();
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -89,7 +90,14 @@ export default function Resources() {
   }, [categoryFilter, searchQuery]);
 
   const handleDownload = (resource: Resource) => {
-    window.open(resource.file_url, "_blank");
+    const fileType = getFileType(resource.file_url);
+    const isHtml = fileType === "HTML" || fileType === "HTM";
+    
+    if (isHtml) {
+      navigate(`/resources/view?url=${encodeURIComponent(resource.file_url)}&title=${encodeURIComponent(resource.title)}`);
+    } else {
+      window.open(resource.file_url, "_blank");
+    }
   };
 
   const getFileType = (url: string) => {

@@ -14,6 +14,7 @@ import Gallery from "./pages/Gallery";
 import Donate from "./pages/Donate";
 import Volunteer from "./pages/Volunteer";
 import Resources from "./pages/Resources";
+import ResourceViewer from "./pages/ResourceViewer";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -69,6 +70,7 @@ const App = () => (
             <Route path="/donate" element={<Donate />} />
             <Route path="/volunteer" element={<Volunteer />} />
             <Route path="/resources" element={<Resources />} />
+            <Route path="/resources/view" element={<ResourceViewer />} />
             <Route path="/recruitment" element={<Recruitment />} />
             <Route path="/youth-news" element={<YouthNews />} />
             <Route path="/contact" element={<Contact />} />
