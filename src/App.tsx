@@ -94,6 +94,7 @@ const App = () => (
             <Route path="/admin/youth-news" element={<YouthNewsAdmin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </PageViewTracker>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
