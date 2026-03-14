@@ -14,6 +14,7 @@ import Gallery from "./pages/Gallery";
 import Donate from "./pages/Donate";
 import Volunteer from "./pages/Volunteer";
 import Resources from "./pages/Resources";
+import ResourceViewer from "./pages/ResourceViewer";
 import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/admin/Dashboard";
