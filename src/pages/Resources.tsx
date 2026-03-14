@@ -223,8 +223,17 @@ export default function Resources() {
                             }}
                             className="gap-1 text-primary hover:text-primary/80"
                           >
-                            <Download className="h-4 w-4" />
-                            <span className="hidden sm:inline">받기</span>
+                            {isViewType(resource.file_url) ? (
+                              <>
+                                <ExternalLink className="h-4 w-4" />
+                                <span className="hidden sm:inline">보기</span>
+                              </>
+                            ) : (
+                              <>
+                                <Download className="h-4 w-4" />
+                                <span className="hidden sm:inline">받기</span>
+                              </>
+                            )}
                           </Button>
                         </TableCell>
                       </TableRow>
