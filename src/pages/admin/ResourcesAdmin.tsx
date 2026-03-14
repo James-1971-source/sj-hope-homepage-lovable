@@ -301,13 +301,44 @@ export default function ResourcesAdmin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>파일 업로드</Label>
-                <FileUpload
-                  onUpload={handleFileUpload}
-                  accept=".pdf,.doc,.docx,.hwp,.hwpx,.xls,.xlsx,.ppt,.pptx,.zip"
-                  maxSize={20}
-                  type="file"
-                />
+                <Label>자료 유형</Label>
+                <Select value={uploadType} onValueChange={(v: "file" | "url") => setUploadType(v)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="file">파일 업로드</SelectItem>
+                    <SelectItem value="url">외부 URL / 임베드 링크</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                {uploadType === "file" ? (
+                  <>
+                    <Label>파일 업로드</Label>
+                    <FileUpload
+                      onUpload={handleFileUpload}
+                      accept=".pdf,.doc,.docx,.hwp,.hwpx,.xls,.xlsx,.ppt,.pptx,.zip,.html,.htm"
+                      maxSize={20}
+                      type="file"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      PDF, HWP, DOC, XLS, PPT, HTML, ZIP 등 (최대 20MB)
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <Label>외부 URL 또는 임베드 URL</Label>
+                    <Input
+                      value={fileUrl}
+                      onChange={(e) => setFileUrl(e.target.value)}
+                      placeholder="https://claude.site/... 또는 웹페이지 URL"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Claude AI 임베드 URL, 웹 보고서 URL 등을 직접 입력하세요
+                    </p>
+                  </>
+                )}
                 {fileUrl && (
                   <div className="flex items-center gap-2 p-2 bg-muted rounded-md">
                     <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
@@ -322,9 +353,6 @@ export default function ResourcesAdmin() {
                     </Button>
                   </div>
                 )}
-                <p className="text-xs text-muted-foreground">
-                  PDF, HWP, DOC, XLS, PPT, ZIP 등 (최대 20MB)
-                </p>
               </div>
               <div className="flex justify-end gap-2 pt-4">
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>
