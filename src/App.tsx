@@ -38,8 +38,14 @@ import Videos from "./pages/Videos";
 import StorageAdmin from "./pages/admin/StorageAdmin";
 import YouthNews from "./pages/YouthNews";
 import YouthNewsAdmin from "./pages/admin/YouthNewsAdmin";
+import { usePageViewTracker } from "./hooks/usePageViewTracker";
 
 const queryClient = new QueryClient();
+
+function PageViewTracker({ children }: { children: React.ReactNode }) {
+  usePageViewTracker();
+  return <>{children}</>;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -48,6 +54,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <PageViewTracker>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/about" element={<About />} />
