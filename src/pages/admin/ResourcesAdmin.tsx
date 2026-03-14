@@ -107,6 +107,8 @@ export default function ResourcesAdmin() {
     setTitle(resource.title);
     setFileUrl(resource.file_url);
     setCategory(resource.category);
+    const isExternal = !resource.file_url.includes("/storage/") && (resource.file_url.startsWith("http") && !resource.file_url.includes("supabase"));
+    setUploadType(isExternal ? "url" : "file");
     setDialogOpen(true);
   };
 
