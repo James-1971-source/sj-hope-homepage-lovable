@@ -93,6 +93,7 @@ export default function ResourcesAdmin() {
     setTitle("");
     setFileUrl("");
     setCategory("일반");
+    setUploadType("file");
     setEditingResource(null);
   };
 
