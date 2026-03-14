@@ -93,8 +93,15 @@ export default function Resources() {
   };
 
   const getFileType = (url: string) => {
-    const ext = url.split(".").pop()?.toUpperCase() || "FILE";
-    return ext.length > 5 ? "FILE" : ext;
+    if (url.includes("claude.site")) return "EMBED";
+    const ext = url.split(".").pop()?.split("?")[0]?.toUpperCase() || "FILE";
+    if (ext === "HTM" || ext === "HTML") return "HTML";
+    return ext.length > 5 ? "LINK" : ext;
+  };
+
+  const isViewType = (url: string) => {
+    const type = getFileType(url);
+    return ["HTML", "EMBED", "LINK"].includes(type) || url.includes("claude.site");
   };
 
   return (
