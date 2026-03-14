@@ -67,6 +67,7 @@ export default function ResourcesAdmin() {
   const [title, setTitle] = useState("");
   const [fileUrl, setFileUrl] = useState("");
   const [category, setCategory] = useState("일반");
+  const [uploadType, setUploadType] = useState<"file" | "url">("file");
 
   const fetchResources = async () => {
     setLoading(true);
