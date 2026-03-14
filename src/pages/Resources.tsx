@@ -90,7 +90,14 @@ export default function Resources() {
   }, [categoryFilter, searchQuery]);
 
   const handleDownload = (resource: Resource) => {
-    window.open(resource.file_url, "_blank");
+    const fileType = getFileType(resource.file_url);
+    const isHtml = fileType === "HTML" || fileType === "HTM";
+    
+    if (isHtml) {
+      navigate(`/resources/view?url=${encodeURIComponent(resource.file_url)}&title=${encodeURIComponent(resource.title)}`);
+    } else {
+      window.open(resource.file_url, "_blank");
+    }
   };
 
   const getFileType = (url: string) => {
