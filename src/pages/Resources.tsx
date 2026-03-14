@@ -89,17 +89,6 @@ export default function Resources() {
     setCurrentPage(1);
   }, [categoryFilter, searchQuery]);
 
-  const handleDownload = (resource: Resource) => {
-    const fileType = getFileType(resource.file_url);
-    const isHtml = fileType === "HTML" || fileType === "HTM";
-    
-    if (isHtml) {
-      navigate(`/resources/view?url=${encodeURIComponent(resource.file_url)}&title=${encodeURIComponent(resource.title)}`);
-    } else {
-      window.open(resource.file_url, "_blank");
-    }
-  };
-
   const getFileType = (url: string) => {
     if (url.includes("claude.site")) return "EMBED";
     const ext = url.split(".").pop()?.split("?")[0]?.toUpperCase() || "FILE";
@@ -110,6 +99,17 @@ export default function Resources() {
   const isViewType = (url: string) => {
     const type = getFileType(url);
     return ["HTML", "EMBED", "LINK"].includes(type) || url.includes("claude.site");
+  };
+
+  const handleDownload = (resource: Resource) => {
+    const fileType = getFileType(resource.file_url);
+    const isHtml = fileType === "HTML" || fileType === "HTM";
+    
+    if (isHtml) {
+      navigate(`/resources/view?url=${encodeURIComponent(resource.file_url)}&title=${encodeURIComponent(resource.title)}`);
+    } else {
+      window.open(resource.file_url, "_blank");
+    }
   };
 
   return (
