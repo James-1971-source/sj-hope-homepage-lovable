@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2, ChevronLeft } from "lucide-react";
+import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2, ChevronLeft, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import {
