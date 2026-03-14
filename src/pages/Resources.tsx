@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2, ChevronLeft } from "lucide-react";
+import { ChevronRight, FileText, Download, Search, Calendar, FileDown, Loader2, ChevronLeft, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -93,8 +93,15 @@ export default function Resources() {
   };
 
   const getFileType = (url: string) => {
-    const ext = url.split(".").pop()?.toUpperCase() || "FILE";
-    return ext.length > 5 ? "FILE" : ext;
+    if (url.includes("claude.site")) return "EMBED";
+    const ext = url.split(".").pop()?.split("?")[0]?.toUpperCase() || "FILE";
+    if (ext === "HTM" || ext === "HTML") return "HTML";
+    return ext.length > 5 ? "LINK" : ext;
+  };
+
+  const isViewType = (url: string) => {
+    const type = getFileType(url);
+    return ["HTML", "EMBED", "LINK"].includes(type) || url.includes("claude.site");
   };
 
   return (
@@ -216,8 +223,17 @@ export default function Resources() {
                             }}
                             className="gap-1 text-primary hover:text-primary/80"
                           >
-                            <Download className="h-4 w-4" />
-                            <span className="hidden sm:inline">받기</span>
+                            {isViewType(resource.file_url) ? (
+                              <>
+                                <ExternalLink className="h-4 w-4" />
+                                <span className="hidden sm:inline">보기</span>
+                              </>
+                            ) : (
+                              <>
+                                <Download className="h-4 w-4" />
+                                <span className="hidden sm:inline">받기</span>
+                              </>
+                            )}
                           </Button>
                         </TableCell>
                       </TableRow>
