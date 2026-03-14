@@ -45,6 +45,7 @@ const categories = [
 const ITEMS_PER_PAGE = 15;
 
 export default function Resources() {
+  const navigate = useNavigate();
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState("all");
