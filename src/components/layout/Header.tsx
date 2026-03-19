@@ -140,9 +140,15 @@ export default function Header() {
                           <ul className="grid w-48 gap-1 p-2">
                             {item.children.map(child => <li key={child.name}>
                                 <NavigationMenuLink asChild>
-                                  <Link to={child.href} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
-                                    <span className="text-sm font-medium">{child.name}</span>
-                                  </Link>
+                                  {(child as any).external ? (
+                                    <a href={child.href} target="_blank" rel="noopener noreferrer" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
+                                      <span className="text-sm font-medium">{child.name}</span>
+                                    </a>
+                                  ) : (
+                                    <Link to={child.href} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
+                                      <span className="text-sm font-medium">{child.name}</span>
+                                    </Link>
+                                  )}
                                 </NavigationMenuLink>
                               </li>)}
                           </ul>
