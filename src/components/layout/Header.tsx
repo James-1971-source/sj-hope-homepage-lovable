@@ -29,6 +29,7 @@ const navigation = [{
   href: "/programs",
   children: [
     { name: "글로벌 드림 프로젝트", href: "/programs?category=global-dream" },
+    { name: "S&J 드림 아카이브", href: "https://sj-dream-archive.vercel.app/", external: true },
     { name: "IT 교육 지원 사업", href: "/programs?category=it-education" },
     { name: "외국어 교육 지원 사업", href: "/programs?category=language-education" },
     { name: "교육비 지원 사업", href: "/programs?category=education-expense" },
@@ -139,9 +140,15 @@ export default function Header() {
                           <ul className="grid w-48 gap-1 p-2">
                             {item.children.map(child => <li key={child.name}>
                                 <NavigationMenuLink asChild>
-                                  <Link to={child.href} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
-                                    <span className="text-sm font-medium">{child.name}</span>
-                                  </Link>
+                                  {(child as any).external ? (
+                                    <a href={child.href} target="_blank" rel="noopener noreferrer" className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
+                                      <span className="text-sm font-medium">{child.name}</span>
+                                    </a>
+                                  ) : (
+                                    <Link to={child.href} className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-muted hover:text-primary focus:bg-muted">
+                                      <span className="text-sm font-medium">{child.name}</span>
+                                    </Link>
+                                  )}
                                 </NavigationMenuLink>
                               </li>)}
                           </ul>
@@ -184,9 +191,15 @@ export default function Header() {
                       <ChevronDown className={cn("h-4 w-4 transition-transform", openSubmenu === item.name && "rotate-180")} />
                     </button>
                     {openSubmenu === item.name && <div className="ml-4 mt-1 space-y-1">
-                        {item.children.map(child => <Link key={child.name} to={child.href} className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                        {item.children.map(child => (child as any).external ? (
+                          <a key={child.name} href={child.href} target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
                             {child.name}
-                          </Link>)}
+                          </a>
+                        ) : (
+                          <Link key={child.name} to={child.href} className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted rounded-lg transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                            {child.name}
+                          </Link>
+                        ))}
                       </div>}
                   </div> : <Link to={item.href} className={cn("block px-4 py-3 font-medium rounded-lg hover:bg-muted transition-colors", isActive(item.href) && "text-primary")} onClick={() => setMobileMenuOpen(false)}>
                     {item.name}
