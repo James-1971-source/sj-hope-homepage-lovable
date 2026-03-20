@@ -33,6 +33,7 @@ import {
 
 const PROGRAM_CATEGORIES = [
   { label: "글로벌 드림 프로젝트", value: "global-dream" },
+  { label: "S&J 드림 아카이브", value: "dream-archive" },
   { label: "IT 교육 지원 사업", value: "it-education" },
   { label: "외국어 교육 지원 사업", value: "language-education" },
   { label: "교육비 지원 사업", value: "education-expense" },
