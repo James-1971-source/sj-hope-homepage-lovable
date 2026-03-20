@@ -29,7 +29,7 @@ const navigation = [{
   href: "/programs",
   children: [
     { name: "글로벌 드림 프로젝트", href: "/programs?category=global-dream" },
-    { name: "S&J 드림 아카이브", href: "https://sj-dream-archive.vercel.app/", external: true },
+    { name: "S&J 드림 아카이브", href: "/programs?category=dream-archive" },
     { name: "IT 교육 지원 사업", href: "/programs?category=it-education" },
     { name: "외국어 교육 지원 사업", href: "/programs?category=language-education" },
     { name: "교육비 지원 사업", href: "/programs?category=education-expense" },
