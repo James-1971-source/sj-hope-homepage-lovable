@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Calendar, ArrowLeft, FileDown } from "lucide-react";
+import { ChevronRight, Calendar, ArrowLeft, FileDown, Eye } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -153,8 +153,10 @@ export default function NewsDetail() {
               <ul className="space-y-2">
                 {post.attachments.map((url, index) => {
                   const fileName = decodeURIComponent(url.split("/").pop() || `첨부파일 ${index + 1}`);
+                  const isHtml = /\.html?$/i.test(url);
+                  const isEmbed = url.includes("claude.site") || url.includes("artifacts");
                   return (
-                    <li key={index}>
+                    <li key={index} className="flex items-center gap-2">
                       <a
                         href={url}
                         target="_blank"
@@ -164,6 +166,15 @@ export default function NewsDetail() {
                         <FileDown className="h-4 w-4 flex-shrink-0" />
                         <span className="text-sm">{fileName}</span>
                       </a>
+                      {(isHtml || isEmbed) && (
+                        <Link
+                          to={`/resources/view?url=${encodeURIComponent(url)}&title=${encodeURIComponent(fileName)}`}
+                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          보기
+                        </Link>
+                      )}
                     </li>
                   );
                 })}
