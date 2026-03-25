@@ -313,11 +313,11 @@ export default function PostsAdmin() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label>첨부파일 (PDF, DOC, 엑셀 등)</Label>
+                <Label>첨부파일 (PDF, DOC, 엑셀, HTML, 이미지, 영상 등)</Label>
                 <MultiFileUpload
                   urls={attachments}
                   onUrlsChange={setAttachments}
-                  accept=".pdf,.doc,.docx,.xls,.xlsx,.hwp,.ppt,.pptx"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.hwp,.ppt,.pptx,.html,.htm,.jpg,.jpeg,.png,.gif,.webp,.mp4"
                   maxSize={20}
                   type="file"
                 />
