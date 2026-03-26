@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Calendar, ArrowLeft, FileDown, Eye } from "lucide-react";
+import { ChevronRight, Calendar, ArrowLeft, FileDown, Paperclip } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -149,7 +149,10 @@ export default function NewsDetail() {
 
           {post.attachments && post.attachments.length > 0 && (
             <div className="mt-8 p-6 bg-muted rounded-lg">
-              <h3 className="font-semibold text-foreground mb-3">📎 첨부파일</h3>
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Paperclip className="h-5 w-5 text-muted-foreground" />
+                첨부파일
+              </h3>
               <ul className="space-y-2">
                 {post.attachments.map((url, index) => {
                   const fileName = decodeURIComponent(url.split("/").pop() || `첨부파일 ${index + 1}`);
@@ -182,15 +185,6 @@ export default function NewsDetail() {
                           <FileDown className="h-4 w-4 flex-shrink-0" />
                           <span className="text-sm">{fileName}</span>
                         </a>
-                      )}
-                      {(isHtml || isEmbed) && (
-                        <Link
-                          to={viewerHref}
-                          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          <Eye className="h-3.5 w-3.5" />
-                          보기
-                        </Link>
                       )}
                     </li>
                   );
