@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Calendar, ArrowLeft, FileDown, Eye } from "lucide-react";
+import { ChevronRight, Calendar, ArrowLeft, FileDown, Paperclip } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Skeleton } from "@/components/ui/skeleton";
 
