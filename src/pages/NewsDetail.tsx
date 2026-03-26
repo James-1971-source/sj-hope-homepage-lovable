@@ -155,20 +155,37 @@ export default function NewsDetail() {
                   const fileName = decodeURIComponent(url.split("/").pop() || `첨부파일 ${index + 1}`);
                   const isHtml = /\.html?$/i.test(url);
                   const isEmbed = url.includes("claude.site") || url.includes("artifacts");
+                  const viewerHref = `/resources/view?${new URLSearchParams({
+                    url,
+                    title: fileName,
+                    from: "news",
+                    returnTo: id ? `/news/${id}` : "/news",
+                    returnLabel: "게시글",
+                  }).toString()}`;
                   return (
                     <li key={index} className="flex items-center gap-2">
-                      <a
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-primary hover:underline"
-                      >
-                        <FileDown className="h-4 w-4 flex-shrink-0" />
-                        <span className="text-sm">{fileName}</span>
-                      </a>
+                      {isHtml || isEmbed ? (
+                        <Link
+                          to={viewerHref}
+                          className="flex items-center gap-2 text-primary hover:underline"
+                        >
+                          <FileDown className="h-4 w-4 flex-shrink-0" />
+                          <span className="text-sm">{fileName}</span>
+                        </Link>
+                      ) : (
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 text-primary hover:underline"
+                        >
+                          <FileDown className="h-4 w-4 flex-shrink-0" />
+                          <span className="text-sm">{fileName}</span>
+                        </a>
+                      )}
                       {(isHtml || isEmbed) && (
                         <Link
-                          to={`/resources/view?url=${encodeURIComponent(url)}&title=${encodeURIComponent(fileName)}`}
+                          to={viewerHref}
                           className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors"
                         >
                           <Eye className="h-3.5 w-3.5" />
