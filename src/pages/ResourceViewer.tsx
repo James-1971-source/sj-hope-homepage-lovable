@@ -8,11 +8,18 @@ export default function ResourceViewer() {
   const [searchParams] = useSearchParams();
   const url = searchParams.get("url") || "";
   const title = searchParams.get("title") || "자료 보기";
+  const from = searchParams.get("from") || "resources";
+  const returnTo = searchParams.get("returnTo") || "/resources";
+  const returnLabel = searchParams.get("returnLabel") || "목록";
   const [htmlContent, setHtmlContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const isHtmlFile = /\.html?/i.test(url) || url.includes(".html");
+  const sectionLabel = from === "news" ? "소식" : "자료실";
+  const sectionPath = from === "news" ? "/news" : "/resources";
+  const pageLabel = from === "news" ? "첨부 보기" : "자료 보기";
+  const viewerUrl = `/resources/view${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
 
   useEffect(() => {
     if (!isHtmlFile || !url) {
@@ -52,9 +59,9 @@ export default function ResourceViewer() {
           <div className="flex items-center gap-2 text-secondary-foreground/70 text-sm mb-3">
             <Link to="/" className="hover:text-secondary-foreground">홈</Link>
             <ChevronRight className="h-4 w-4" />
-            <Link to="/resources" className="hover:text-secondary-foreground">자료실</Link>
+            <Link to={sectionPath} className="hover:text-secondary-foreground">{sectionLabel}</Link>
             <ChevronRight className="h-4 w-4" />
-            <span>자료 보기</span>
+            <span>{pageLabel}</span>
           </div>
           <div className="flex items-center justify-between gap-4">
             <h1 className="text-xl md:text-2xl font-bold text-secondary-foreground truncate">
@@ -62,12 +69,12 @@ export default function ResourceViewer() {
             </h1>
             <div className="flex gap-2 flex-shrink-0">
               <Button variant="outline" size="sm" asChild>
-                <Link to="/resources">
+                <Link to={returnTo}>
                   <ArrowLeft className="h-4 w-4 mr-1" />
-                  목록
+                  {returnLabel}
                 </Link>
               </Button>
-              <Button variant="outline" size="sm" onClick={() => window.open(url, "_blank")}>
+              <Button variant="outline" size="sm" onClick={() => window.open(viewerUrl, "_blank", "noopener,noreferrer")}>
                 <ExternalLink className="h-4 w-4 mr-1" />
                 새 창
               </Button>
