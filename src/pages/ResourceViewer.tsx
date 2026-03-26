@@ -12,7 +12,7 @@ export default function ResourceViewer() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const isHtmlFile = /\.(html?)([\?#]|$)/i.test(url);
+  const isHtmlFile = /\.html?/i.test(url) || url.includes(".html");
 
   useEffect(() => {
     if (!isHtmlFile || !url) {
