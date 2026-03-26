@@ -24,7 +24,16 @@ export default function ResourceViewer() {
       try {
         const res = await fetch(url);
         if (!res.ok) throw new Error("Failed to fetch");
-        const text = await res.text();
+        const buffer = await res.arrayBuffer();
+        // Try UTF-8 first, then fallback
+        let text = new TextDecoder("utf-8").decode(buffer);
+        // Ensure charset meta is present for proper rendering
+        if (!text.includes("<meta charset") && !text.includes("<meta http-equiv=\"Content-Type\"")) {
+          text = text.replace(/<head>/i, '<head><meta charset="UTF-8">');
+          if (!text.includes("<head>") && !text.includes("<HEAD>")) {
+            text = '<meta charset="UTF-8">' + text;
+          }
+        }
         setHtmlContent(text);
       } catch {
         setError(true);
