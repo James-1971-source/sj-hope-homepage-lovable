@@ -40,7 +40,7 @@ interface Resource {
 
 const categories = [
   { value: "신청서/서식", label: "신청서/서식" },
-  { value: "보고서", label: "보고서" },
+  { value: "재무보고서", label: "재무보고서" },
   { value: "안내자료", label: "안내자료" },
   { value: "일반", label: "일반" },
   { value: "소식지", label: "소식지" },
