@@ -26,7 +26,7 @@ interface Resource {
 const categories = [
   { id: "all", name: "전체" },
   { id: "신청서/서식", name: "신청서/서식" },
-  { id: "보고서", name: "보고서" },
+  { id: "재무보고서", name: "재무보고서" },
   { id: "안내자료", name: "안내자료" },
   { id: "일반", name: "일반" },
   { id: "소식지", name: "소식지" },
