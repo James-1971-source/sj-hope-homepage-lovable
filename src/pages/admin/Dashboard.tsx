@@ -10,6 +10,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import GithubSyncPanel from "@/components/admin/GithubSyncPanel";
 
 interface DashboardStats {
   posts: number;
@@ -254,6 +255,9 @@ export default function AdminDashboard() {
             )}
           </CardContent>
         </Card>
+
+        {/* GitHub Sync */}
+        <GithubSyncPanel />
 
         {/* Quick Actions */}
         <Card>
